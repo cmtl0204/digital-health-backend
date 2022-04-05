@@ -93,7 +93,7 @@ return [
             'sslmode' => 'prefer',
         ],
 
-        'pgsql-psychology' => [
+        'pgsql-app' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),
             'host' => env('DB_HOST', '127.0.0.1'),
@@ -104,7 +104,7 @@ return [
             'charset' => 'utf8',
             'prefix' => '',
             'prefix_indexes' => true,
-            'schema' => env('DB_SCHEMA_PSYCHOLOGY', 'public'),
+            'schema' => env('DB_SCHEMA_APP', 'public'),
             'sslmode' => 'prefer',
         ],
 

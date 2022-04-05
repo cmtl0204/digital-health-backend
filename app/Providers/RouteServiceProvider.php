@@ -49,8 +49,8 @@ class RouteServiceProvider extends ServiceProvider
 
     protected function mapApiRoutesPrivates()
     {
-        $prefix = "api/v1";
-        $path = "routes/$prefix/private";
+        $prefix = "api/v1/private";
+        $path = "routes/$prefix";
 
         Route::prefix($prefix)
             ->middleware(['api', 'auth:sanctum', 'verify_user_suspended'])
@@ -62,13 +62,13 @@ class RouteServiceProvider extends ServiceProvider
 
         Route::prefix($prefix)
             ->middleware(['api', 'auth:sanctum', 'verify_user_suspended'])
-            ->group(base_path("${path}/psychology.php"));
+            ->group(base_path("${path}/app.php"));
     }
 
     protected function mapApiRoutesPublic()
     {
-        $prefix = "api/v1";
-        $path = "routes/$prefix/public";
+        $prefix = "api/v1/public";
+        $path = "routes/$prefix";
 
         Route::prefix($prefix)
             ->middleware('api')
@@ -84,7 +84,7 @@ class RouteServiceProvider extends ServiceProvider
 
         Route::prefix($prefix)
             ->middleware('api')
-            ->group(base_path("${path}/psychology.php"));
+            ->group(base_path("${path}/app.php"));
     }
 
     /**

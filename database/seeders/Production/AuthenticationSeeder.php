@@ -120,7 +120,7 @@ class AuthenticationSeeder extends Seeder
     {
         Role::create(['name' => 'admin']);
         Role::create(['name' => 'guest']);
-        Role::create(['name' => 'professional']);
+        Role::create(['name' => 'app']);
         Role::create(['name' => 'company']);
     }
 
@@ -146,7 +146,7 @@ class AuthenticationSeeder extends Seeder
     private function assignRolePermissions()
     {
         $role = Role::firstWhere('name', 'admin');
-        $roleProfessional = Role::firstWhere('name', 'professional');
+        $roleProfessional = Role::firstWhere('name', 'app');
         $role->syncPermissions(Permission::get());
         $roleProfessional->syncPermissions(Permission::where('name','like','%professionals%')->get());
     }

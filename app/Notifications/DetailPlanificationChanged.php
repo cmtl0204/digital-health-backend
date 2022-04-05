@@ -2,7 +2,7 @@
 
 namespace App\Notifications;
 
-use App\Models\Psychology\DetailPlanification;
+use App\Models\App\DetailPlanification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
