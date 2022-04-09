@@ -29,19 +29,19 @@ class AppSeeder extends Seeder
         Catalogue::factory(4)->sequence(
             [
                 'name' => 'NORTE',
-                'type' => $catalogues['catalogue']['sector']['type'],
+                'type' => $catalogues['catalogue']['sector_location']['type'],
             ],
             [
                 'name' => 'CENTRO',
-                'type' => $catalogues['catalogue']['sector']['type'],
+                'type' => $catalogues['catalogue']['sector_location']['type'],
             ],
             [
                 'name' => 'SUR',
-                'type' => $catalogues['catalogue']['sector']['type'],
+                'type' => $catalogues['catalogue']['sector_location']['type'],
             ],
             [
                 'name' => 'VALLES',
-                'type' => $catalogues['catalogue']['sector']['type'],
+                'type' => $catalogues['catalogue']['sector_location']['type'],
             ],
         )->create();
     }

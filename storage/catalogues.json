@@ -106,6 +106,9 @@
         }
     },
     "catalogue": {
+        "sector_location": {
+            "type": "SECTOR_LOCATION"
+        },
         "sector": {
             "type": "SECTOR"
         },

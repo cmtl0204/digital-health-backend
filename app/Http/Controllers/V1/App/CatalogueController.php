@@ -5,8 +5,8 @@ namespace App\Http\Controllers\V1\App;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\App\Catalogues\CatalogueCatalogueRequest;
 use App\Http\Requests\V1\App\Catalogues\IndexCatalogueRequest;
-use App\Http\Resources\V1\App\Catalogues\PatientCollection;
-use App\Models\Core\Catalogue;
+use App\Http\Resources\V1\App\Catalogues\CatalogueCollection;
+use App\Models\App\Catalogue;
 
 class CatalogueController extends Controller
 {
@@ -45,7 +45,7 @@ class CatalogueController extends Controller
             ->limit(1000)
             ->get();
 
-        return (new PatientCollection($catalogues))
+        return (new CatalogueCollection($catalogues))
             ->additional([
                 'msg' => [
                     'summary' => 'success',
