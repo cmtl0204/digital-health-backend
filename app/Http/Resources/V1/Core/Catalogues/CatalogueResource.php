@@ -22,7 +22,7 @@ class CatalogueResource extends JsonResource
             'icon' => $this->icon,
             'description' => $this->description,
             'color' => $this->color,
-//            'parent'=>$this->when($this->parent, CatalogueResource::make($this->parent)),
+//            'parent'=>$this->when($this->parent, ClinicalHistoryResource::make($this->parent)),
             'parent' => CatalogueResource::make($this->parent),
         ];
     }

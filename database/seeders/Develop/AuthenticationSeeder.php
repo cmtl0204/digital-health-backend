@@ -49,7 +49,6 @@ class AuthenticationSeeder extends Seeder
         $this->assignUserRoles();
 
         $this->createStates();
-        $this->deleteLocations();
     }
 
     private function createSystem()
@@ -98,54 +97,27 @@ class AuthenticationSeeder extends Seeder
     {
         $identificationTypes = Catalogue::where('type', 'IDENTIFICATION_PROFESSIONAL_TYPE')->get();
         $sexes = Catalogue::where('type', 'SEX_TYPE')->get();
-        $genders = Catalogue::where('type', 'GENDER_TYPE')->get();
-        $ethnicOrigin = Catalogue::where('type', 'ETHNIC_ORIGIN_TYPE')->get();
-        $bloodType = Catalogue::where('type', 'BLOOD_TYPE')->get();
-        $civilStatus = Catalogue::where('type', 'CIVIL_STATUS')->get();
-        $operators = Catalogue::where('type', 'PHONE_OPERATOR')->get();
-        $locations = Location::where('type_id', 1)->get();
-        $userFactory = User::factory()->create(
+        $userFactory = User::factory(3)->sequence(
             [
-                'username' => '1234567890',
-                'identification_type_id' => $identificationTypes[rand(0, $identificationTypes->count() - 1)],
-                'sex_id' => $sexes[rand(0, $sexes->count() - 1)],
-                'gender_id' => $genders[rand(0, $genders->count() - 1)],
-                'ethnic_origin_id' => $ethnicOrigin[rand(0, $ethnicOrigin->count() - 1)],
-                'blood_type_id' => $bloodType[rand(0, $bloodType->count() - 1)],
-                'civil_status_id' => $civilStatus[rand(0, $civilStatus->count() - 1)],
+                'username' => '1234567891',
+                'sex_id' => $sexes[rand(0, $sexes->count() - 1)]
+            ],
+            [
+                'username' => '1234567892',
+                'sex_id' => $sexes[rand(0, $sexes->count() - 1)]
+            ],
+            [
+                'username' => '1234567893',
+                'sex_id' => $sexes[rand(0, $sexes->count() - 1)]
             ]
-        );
-        Phone::factory(2)->for($userFactory, 'phoneable')
-            ->create(
-                [
-                    'operator_id' => $operators[rand(0, $operators->count() - 1)],
-                    'location_id' => $locations[rand(0, $locations->count() - 1)]
-                ]
-            );
-        Email::factory(2)->for($userFactory, 'emailable')->create();
-        for ($i = 1; $i <= 3; $i++) {
-            $userFactory = User::factory()
-                ->create([
-                    'identification_type_id' => $identificationTypes[rand(0, $identificationTypes->count() - 1)],
-                    'sex_id' => $sexes[rand(0, $sexes->count() - 1)],
-                    'gender_id' => $genders[rand(0, $genders->count() - 1)],
-                    'ethnic_origin_id' => $ethnicOrigin[rand(0, $ethnicOrigin->count() - 1)],
-                    'blood_type_id' => $bloodType[rand(0, $bloodType->count() - 1)],
-                    'civil_status_id' => $civilStatus[rand(0, $civilStatus->count() - 1)],
-                ]);
-            Phone::factory(2)->for($userFactory, 'phoneable')
-                ->create(['operator_id' => $operators[rand(0, $operators->count() - 1)]]);
-            Email::factory(2)->for($userFactory, 'emailable')->create();
-        }
+        )->create();
     }
 
     private function createRoles()
     {
         Role::create(['name' => 'admin']);
-        Role::create(['name' => 'support']);
-        Role::create(['name' => 'viewer']);
-//        Role::create(['name' => 'patient']);
-//        Role::create(['name' => 'guest']);
+        Role::create(['name' => 'medic']);
+        Role::create(['name' => 'patient']);
     }
 
     private function createPermissions()
@@ -155,37 +127,40 @@ class AuthenticationSeeder extends Seeder
         Permission::create(['name' => 'update-users']);
         Permission::create(['name' => 'delete-users']);
 
-        Permission::create(['name' => 'view-tests']);
-        Permission::create(['name' => 'store-tests']);
-        Permission::create(['name' => 'update-tests']);
-        Permission::create(['name' => 'delete-tests']);
+        Permission::create(['name' => 'view-patients']);
+        Permission::create(['name' => 'store-patients']);
+        Permission::create(['name' => 'update-patients']);
+        Permission::create(['name' => 'delete-patients']);
 
-        Permission::create(['name' => 'store-assignments']);
-        Permission::create(['name' => 'update-assignments']);
+        Permission::create(['name' => 'view-clinicalHistories']);
+        Permission::create(['name' => 'store-clinicalHistories']);
+        Permission::create(['name' => 'update-clinicalHistories']);
+        Permission::create(['name' => 'delete-clinicalHistories']);
     }
 
     private function assignRolePermissions()
     {
         $role = Role::firstWhere('name', 'admin');
-        $roleSupport = Role::firstWhere('name', 'support');
-        $roleViewer = Role::firstWhere('name', 'viewer');
+        $roleMedic = Role::firstWhere('name', 'medic');
+        $rolePatient = Role::firstWhere('name', 'patient');
 
-        $role->syncPermissions(Permission::get());
+        $role->syncPermissions(Permission::where('name', 'like', '%users%')->get());
 
-        $roleSupport->syncPermissions(Permission::where('name', 'like', '%tests%')
-            ->orWhere('name', 'like', '%assignments%')->get());
+        $roleMedic->syncPermissions(Permission::where('name', 'like', '%patients%')
+            ->orWhere('name', 'like', '%clinicalHistories%')->get());
 
-        $roleViewer->syncPermissions(['view-tests']);
+        $rolePatient->syncPermissions(Permission::where('name', 'like', '%patients%')
+            ->orWhere('name', 'like', '%clinicalHistories%')->get());
     }
 
     private function assignUserRoles()
     {
         $userAdmin = User::find(1);
-        $userSupport = User::find(2);
-        $userViewer = User::find(3);
+        $userMedic = User::find(2);
+        $userPatient = User::find(3);
         $userAdmin->assignRole('admin');
-        $userSupport->assignRole('support');
-        $userViewer->assignRole('viewer');
+        $userMedic->assignRole('medic');
+        $userPatient->assignRole('patient');
     }
 
     private function createLocationCatalogues()
@@ -787,7 +762,7 @@ class AuthenticationSeeder extends Seeder
     private function createSectorTypeCatalogues()
     {
         $catalogues = json_decode(file_get_contents(storage_path() . "/catalogues.json"), true);
-        Catalogue::factory(3)->sequence(
+        Catalogue::factory(4)->sequence(
             [
                 'name' => 'NORTE',
                 'type' => $catalogues['catalogue']['sector']['type'],
@@ -798,6 +773,10 @@ class AuthenticationSeeder extends Seeder
             ],
             [
                 'name' => 'SUR',
+                'type' => $catalogues['catalogue']['sector']['type'],
+            ],
+            [
+                'name' => 'VALLES',
                 'type' => $catalogues['catalogue']['sector']['type'],
             ],
         )->create();

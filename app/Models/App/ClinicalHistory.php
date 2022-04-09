@@ -2,45 +2,34 @@
 
 namespace App\Models\App;
 
-use App\Models\Authentication\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use OwenIt\Auditing\Contracts\Auditable;
 use OwenIt\Auditing\Auditable as Auditing;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Patient extends Model implements Auditable
+class ClinicalHistory extends Model implements Auditable
 {
     use HasFactory;
     use Auditing;
     use SoftDeletes;
 
-    protected $table = 'app.patients';
+    protected $table = 'app.clinical_histories';
 
     protected $fillable = [
-        'code',
-        'description',
-        'name',
-        'type',
+        'height',
+        'weight',
     ];
 
     // Relationsships
-    public function clinicalHistories()
+    public function patient()
     {
-        return $this->hasMany(ClinicalHistory::class);
-    }
-
-    public function sector()
-    {
-        return $this->belongsTo(Catalogue::class);
-    }
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Patient::class);
     }
 
     // Mutators
+
+    // Scopes
     public function scopeCustomOrderBy($query, $sorts)
     {
         if (!empty($sorts[0])) {

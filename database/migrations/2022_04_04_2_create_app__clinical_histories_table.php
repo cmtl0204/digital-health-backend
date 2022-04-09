@@ -16,6 +16,85 @@ class CreateAppClinicalHistoriesTable extends Migration
             $table->foreignId('patient_id')
                 ->constrained('app.patients');
 
+            $table->double('basal_metabolic_rate')
+                ->nullable()
+                ->comment('En kilo calorias');
+
+            $table->double('blood_pressure')
+                ->nullable()
+                ->comment('En mg');
+
+            $table->double('breathing_frequency')
+                ->nullable()
+                ->comment('En latidos/minutos');
+
+            $table->double('glucose')
+                ->nullable()
+                ->comment('En mg/dl');
+
+            $table->double('hdl_cholesterol')
+                ->nullable()
+                ->comment('En mg/dl');
+            
+            $table->double('heart_rate')
+                ->nullable()
+                ->comment('En latidos/minutos');
+
+            $table->double('height')
+                ->nullable()
+                ->comment('En metros');
+
+            $table->double('imc')
+                ->nullable()
+                ->comment('En kg/m2');
+
+            $table->double('ldl_cholesterol')
+                ->nullable()
+                ->comment('En mg/dl');
+
+            $table->integer('metabolic_age')
+                ->nullable()
+                ->comment('En años');
+
+            $table->double('neck_circumference')
+                ->nullable()
+                ->comment('En centimetros');
+
+            $table->double('percentage_body_fat')
+                ->nullable()
+                ->comment('En porcentaje, Ej. 50');
+
+            $table->double('percentage_body_mass')
+                ->nullable()
+                ->comment('En porcentaje, Ej. 50');
+
+            $table->double('percentage_body_water')
+                ->nullable()
+                ->comment('En porcentaje, Ej. 50');
+
+            $table->double('percentage_bone_mass')
+                ->nullable()
+                ->comment('En porcentaje, Ej. 50');
+
+            $table->double('percentage_visceral_fat')
+                ->nullable()
+                ->comment('En porcentaje, Ej. 50');
+
+            $table->date('registered_at')
+                ->nullable()
+                ->comment('Fecha de registro');
+
+            $table->double('total_cholesterol')
+                ->nullable()
+                ->comment('En mg/dl');
+
+            $table->double('waist_circumference')
+                ->nullable()
+                ->comment('En centimetros');
+
+            $table->double('weight')
+                ->nullable()
+                ->comment('En kilogramos');
         });
     }
 

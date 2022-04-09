@@ -19,9 +19,7 @@ class CatalogueResource extends JsonResource
             'id' => $this->id,
             'code' => $this->code,
             'name' => $this->name,
-            'icon' => $this->icon,
             'description' => $this->description,
-            'color' => $this->color,
         ];
     }
 }

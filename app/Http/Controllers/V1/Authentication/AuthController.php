@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\V1\Authentication;
 
+use App\Http\Requests\V1\Core\Users\StoreUserRequest;
 use App\Http\Resources\V1\Authentication\PersonalAccessTokenResource;
 use App\Models\Authentication\PersonalAccessToken;
+use App\Models\Core\Catalogue;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;

@@ -13,8 +13,16 @@ class CreateAppPatientsTable extends Migration
             $table->timestamps();
             $table->softDeletes();
 
+            $table->foreignId('sector_id')
+                ->nullable()
+                ->constrained('core.catalogues');
+
             $table->foreignId('user_id')
                 ->constrained('authentication.users');
+
+            $table->boolean('is_smoke')
+                ->nullable()
+                ->comment('true=si, false=no');
         });
     }
 

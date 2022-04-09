@@ -2,6 +2,7 @@
 
 namespace App\Models\Authentication;
 
+use App\Models\App\Patient;
 use App\Models\Core\Catalogue;
 use App\Models\Core\Email;
 use App\Models\Core\File;
@@ -119,6 +120,11 @@ class User extends Authenticatable implements Auditable, MustVerifyEmail
     public function images()
     {
         return $this->morphMany(Image::class, 'imageable');
+    }
+
+    public function patient()
+    {
+        return $this->hasOne(Patient::class);
     }
 
     public function phones()

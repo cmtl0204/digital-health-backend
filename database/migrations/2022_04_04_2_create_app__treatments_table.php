@@ -19,11 +19,11 @@ class CreateAppTreatmentsTable extends Migration
             $table->json('additional_information')
                 ->comment('Con la estructura {title, description}');
 
-            $table->string('started_at')
-                ->comment('Fecha de inicio del tratamiento');
-
-            $table->string('ended_at')
+            $table->date('ended_at')
                 ->comment('Fecha de fin del tratamiento');
+
+            $table->date('started_at')
+                ->comment('Fecha de inicio del tratamiento');
         });
     }
 

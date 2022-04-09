@@ -23,13 +23,13 @@ class DatabaseSeeder extends Seeder
             $this->call([
                 AuthenticationSeeder::class,
                 CoreSeeder::class,
-//                AppSeeder::class
+                AppSeeder::class
             ]);
         } else {
             $this->call([
                 AuthenticationSeederProd::class,
                 CoreSeederProd::class,
-//                AppSeeder::class
+                AppSeeder::class
             ]);
         }
     }
