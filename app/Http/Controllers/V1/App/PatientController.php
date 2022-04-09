@@ -156,7 +156,7 @@ class PatientController extends Controller
 
     public function storeClinicalHistory(Request $request, Patient $patient)
     {
-        $patient->is_smoke = $request->input('is_smoke');
+        $patient->is_smoke = $request->input('isSmoke');
         $patient->save();
 
         $clinicalHistory = new ClinicalHistory();
@@ -196,7 +196,7 @@ class PatientController extends Controller
 
     public function updateClinicalHistory(Request $request, Patient $patient, ClinicalHistory $clinicalHistory)
     {
-        $patient->is_smoke = $request->input('is_smoke');
+        $patient->is_smoke = $request->input('isSmoke');
         $patient->save();
 
         $clinicalHistory->patient()->associate($patient);
