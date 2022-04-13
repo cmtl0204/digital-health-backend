@@ -62,6 +62,8 @@ class User extends Authenticatable implements Auditable, MustVerifyEmail
         'max_attempts',
     ];
 
+    protected $appends = ['age'];
+
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -271,5 +273,11 @@ class User extends Authenticatable implements Auditable, MustVerifyEmail
                 'code' => '201',
             ]
         ], 201);
+    }
+
+    public function getAgeAttribute()
+    {
+
+        return "18";
     }
 }
