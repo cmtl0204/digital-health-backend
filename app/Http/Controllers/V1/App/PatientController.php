@@ -168,7 +168,7 @@ class PatientController extends Controller
         $clinicalHistory->hdl_cholesterol = $request->input('hdlCholesterol');
         $clinicalHistory->heart_rate = $request->input('heartRate');
         $clinicalHistory->height = $request->input('height');
-        $clinicalHistory->imc = $request->input('weight') / $request->input('height') * $request->input('height');
+        $clinicalHistory->imc = $this->calculateImc($request->input('weight'), $request->input('height'));
         $clinicalHistory->ldl_cholesterol = $request->input('ldlCholesterol');
         $clinicalHistory->metabolic_age = $request->input('metabolicAge');
         $clinicalHistory->neck_circumference = $request->input('neckCircumference');
@@ -249,4 +249,13 @@ class PatientController extends Controller
             ])
             ->response()->setStatusCode(200);
     }
+
+    private function calculateImc($weight, $height)
+    {
+        if (isset($weight) && isset($height)) {
+            return $weight / $height * $height;
+        }
+        return null;
+    }
+
 }
