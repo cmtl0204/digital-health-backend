@@ -31,3 +31,16 @@ Route::controller(PatientController::class)->group(function () {
         Route::post('users','registerPatientUser');
     });
 });
+
+Route::controller(PatientController::class)->group(function () {
+    Route::prefix('patients/{patient}')->group(function () {
+        Route::post('clinical-histories','storeClinicalHistory');
+        Route::put('clinical-histories/{clinical_history}','updateClinicalHistory');
+        Route::get('clinical-histories','getClinicalHistories');
+        Route::put('users','updatePatientUser');
+    });
+
+    Route::prefix('patients')->group(function () {
+
+    });
+});
