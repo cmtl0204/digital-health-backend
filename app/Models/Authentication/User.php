@@ -12,6 +12,7 @@ use App\Traits\EmailTrait;
 use App\Traits\FileTrait;
 use App\Traits\ImageTrait;
 use App\Traits\PhoneTrait;
+use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -277,7 +278,6 @@ class User extends Authenticatable implements Auditable, MustVerifyEmail
 
     public function getAgeAttribute()
     {
-
-        return "18";
+        return Carbon::parse($this->attributes['birthdate'] )->age;
     }
 }
