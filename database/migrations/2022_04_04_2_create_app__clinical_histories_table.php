@@ -35,7 +35,7 @@ class CreateAppClinicalHistoriesTable extends Migration
             $table->double('hdl_cholesterol')
                 ->nullable()
                 ->comment('En mg/dl');
-            
+
             $table->double('heart_rate')
                 ->nullable()
                 ->comment('En latidos/minutos');
@@ -47,6 +47,14 @@ class CreateAppClinicalHistoriesTable extends Migration
             $table->double('imc')
                 ->nullable()
                 ->comment('En kg/m2');
+
+            $table->boolean('is_smoke')
+                ->nullable()
+                ->comment('true=si, false=no');
+
+            $table->boolean('is_diabetes')
+                ->nullable()
+                ->comment('true=si, false=no');
 
             $table->double('ldl_cholesterol')
                 ->nullable()

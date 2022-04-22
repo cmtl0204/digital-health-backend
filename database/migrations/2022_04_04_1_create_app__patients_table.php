@@ -19,10 +19,6 @@ class CreateAppPatientsTable extends Migration
 
             $table->foreignId('user_id')
                 ->constrained('authentication.users');
-
-            $table->boolean('is_smoke')
-                ->nullable()
-                ->comment('true=si, false=no');
         });
     }
 

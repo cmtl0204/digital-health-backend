@@ -44,3 +44,4 @@ Route::controller(PatientController::class)->group(function () {
 
     });
 });
+
