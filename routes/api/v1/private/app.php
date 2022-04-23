@@ -44,7 +44,8 @@ Route::controller(ClinicalHistoryController::class)->group(function () {
     });
 
     Route::prefix('clinical-histories')->group(function () {
-        Route::get('patients/{patient}','getByPatient');
+        Route::get('patients/{patient}','indexByPatient');
+        Route::get('patients/{patient}/last','showLastByPatient');
         Route::post('patients/{patient}','store');
     });
 });

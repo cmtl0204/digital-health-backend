@@ -28,11 +28,11 @@ class ClinicalHistoryController extends Controller
         $this->middleware('permission:view-clinicalHistories')->only(['getClinicalHistories']);
     }
 
-    public function index(Request $request, Patient $patient)
+    public function indexByPatient(Request $request, Patient $patient)
     {
         $clinicalHistories = $patient->clinicalHistories()
             ->orderBy('registered_at')
-            ->get();
+            ->paginate();
 
         return (new ClinicalHistoryCollection($clinicalHistories))
             ->additional([
@@ -58,7 +58,7 @@ class ClinicalHistoryController extends Controller
             ->response()->setStatusCode(200);
     }
 
-    public function getByPatient(Patient $patient)
+    public function showLastByPatient(Patient $patient)
     {
         $clinicalHistory = $patient->clinicalHistories()
             ->orderByDesc('registered_at')
@@ -115,11 +115,9 @@ class ClinicalHistoryController extends Controller
             ->response()->setStatusCode(201);
     }
 
-    public function update(Request $request, Patient $patient, ClinicalHistory $clinicalHistory)
+    public function update(Request $request, ClinicalHistory $clinicalHistory, Patient $patient)
     {
-        $patient->is_smoke = $request->input('isSmoke');
         $patient->save();
-
         $clinicalHistory->patient()->associate($patient);
         $clinicalHistory->basal_metabolic_rate = $request->input('basalMetabolicRate');
         $clinicalHistory->blood_pressure = $request->input('bloodPressure');

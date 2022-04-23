@@ -9,13 +9,27 @@ class ClinicalHistoryCollection extends ResourceCollection
     /**
      * Transform the resource collection into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array
      */
     public function toArray($request)
     {
-         return [
-            'data' => $this->collection
+        return [
+            'data' => $this->collection,
+        ];
+    }
+
+    public function with($request)
+    {
+        return [
+            'meta' => [
+                'totalItems' => $this->total(),
+                'currentPage' => $this->currentPage(),
+                'perPage' => $this->perPage(),
+                'lastPage' => $this->lastPage(),
+                'firstItem' => $this->firstItem(),
+                'lastItem' => $this->lastItem()
+            ],
         ];
     }
 }
