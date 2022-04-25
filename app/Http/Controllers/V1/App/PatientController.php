@@ -13,6 +13,7 @@ use App\Models\App\ClinicalHistory;
 use App\Models\App\FraminghamTable;
 use App\Models\App\Patient;
 use App\Models\App\ReferenceValue;
+use App\Models\App\Risk;
 use App\Models\Authentication\User;
 use App\Models\Core\Catalogue;
 use Illuminate\Http\Request;
@@ -170,7 +171,7 @@ class PatientController extends Controller
         $muscleMass = $this->calculateMuscleMass($user, $clinicalHistory);
         $boneMass = $this->calculateBoneMass($user, $clinicalHistory);
         $iceScore = $this->calculateIceScore($clinicalHistory);
-        $neckCircumferenceScore = $this->calculateNeckCircumferenceScore($user, $clinicalHistory);
+        $neckCircumference = $this->calculateNeckCircumferenceScore($user, $clinicalHistory);
         $scores = $this->calculateFraminghamTable($user, $clinicalHistory);
 
         $data = array(
@@ -180,7 +181,7 @@ class PatientController extends Controller
             'muscleMass' => $muscleMass,
             'boneMass' => $boneMass,
             'ice' => $iceScore,
-            'neckCircumferenceScore' => $neckCircumferenceScore,
+            'neckCircumference' => $neckCircumference,
             'scores' => $scores,
         );
 
@@ -206,7 +207,10 @@ class PatientController extends Controller
                 ->where('value_min', '<=', $clinicalHistory->percentage_body_fat)
                 ->where('value_max', '>=', $clinicalHistory->percentage_body_fat)
                 ->first();
-            $result = $referenceValue->interpretation;
+            if ($referenceValue)
+                $result = $referenceValue->interpretation;
+            else
+                $result = 'Fuera del Rango';
         }
         return $result;
     }
@@ -221,7 +225,10 @@ class PatientController extends Controller
                 ->where('value_min', '<=', $clinicalHistory->percentage_body_water)
                 ->where('value_max', '>=', $clinicalHistory->percentage_body_water)
                 ->first();
-            $result = $referenceValue->interpretation;
+            if ($referenceValue)
+                $result = $referenceValue->interpretation;
+            else
+                $result = 'Fuera del Rango';
         }
         return $result;
     }
@@ -236,7 +243,10 @@ class PatientController extends Controller
                 ->where('value_min', '<=', $clinicalHistory->percentage_visceral_fat)
                 ->where('value_max', '>=', $clinicalHistory->percentage_visceral_fat)
                 ->first();
-            $result = $referenceValue->interpretation;
+            if ($referenceValue)
+                $result = $referenceValue->interpretation;
+            else
+                $result = 'Fuera del Rango';
         }
         return $result;
     }
@@ -253,7 +263,10 @@ class PatientController extends Controller
                 ->where('value_min', '<=', $clinicalHistory->muscle_mass)
                 ->where('value_max', '>=', $clinicalHistory->muscle_mass)
                 ->first();
-            $result = $referenceValue->interpretation;
+            if ($referenceValue)
+                $result = $referenceValue->interpretation;
+            else
+                $result = 'Fuera del Rango';
         }
         return $result;
     }
@@ -270,7 +283,10 @@ class PatientController extends Controller
                 ->where('value_min', '<=', $clinicalHistory->bone_mass)
                 ->where('value_max', '>=', $clinicalHistory->bone_mass)
                 ->first();
-            $result = $referenceValue->interpretation;
+            if ($referenceValue)
+                $result = $referenceValue->interpretation;
+            else
+                $result = 'Fuera del Rango';
         }
         return $result;
     }
@@ -322,6 +338,14 @@ class PatientController extends Controller
                 ->first())->score;
 
             $totalScore = $scoreAge + $scoreTotalCholesterol + $scoreHdlCholesterol + $scoreBloodPressure + $scoreDiabetes + $scoreSmoke;
+
+            $risk = Risk::where('sex', $user->sex->code)
+                ->where('age_min', '<=', $user->age)
+                ->where('age_max', '>=', $user->age)
+                ->where('value_min', '<=', $totalScore)
+                ->where('value_max', '>=', $totalScore)
+                ->first();
+
             return array(
                 'scoreAge' => $scoreAge,
                 'scoreTotalCholesterol' => $scoreTotalCholesterol,
@@ -330,6 +354,7 @@ class PatientController extends Controller
                 'scoreDiabetes' => $scoreDiabetes,
                 'scoreSmoke' => $scoreSmoke,
                 'totalScore' => $totalScore,
+                'risk' => $risk
             );
         }
 
