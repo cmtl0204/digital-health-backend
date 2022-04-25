@@ -2,6 +2,7 @@
 
 namespace App\Models\App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -20,6 +21,8 @@ class ClinicalHistory extends Model implements Auditable
         'height',
         'weight',
     ];
+
+    protected $appends = ['imc', 'ice'];
 
     // Relationsships
     public function patient()
@@ -43,5 +46,22 @@ class ClinicalHistory extends Model implements Auditable
             }
             return $query;
         }
+    }
+
+    // Getters
+    public function getImcAttribute()
+    {
+        if ($this->attributes['height']) {
+            return $this->attributes['weight'] / $this->attributes['height'] * $this->attributes['height'];
+        }
+        return null;
+    }
+
+    public function getIceAttribute()
+    {
+        if ($this->attributes['height']) {
+            return $this->attributes['waist_circumference'] / $this->attributes['height'] * 100;
+        }
+        return null;
     }
 }

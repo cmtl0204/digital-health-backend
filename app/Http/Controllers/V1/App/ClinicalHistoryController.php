@@ -86,16 +86,15 @@ class ClinicalHistoryController extends Controller
         $clinicalHistory->hdl_cholesterol = $request->input('hdlCholesterol');
         $clinicalHistory->heart_rate = $request->input('heartRate');
         $clinicalHistory->height = $request->input('height');
-        $clinicalHistory->imc = $this->calculateImc($request->input('weight'), $request->input('height'));
-        $patient->is_smoke = $request->input('isSmoke');
-        $patient->is_diabetes = $request->input('isDiabetes');
+        $clinicalHistory->is_smoke = $request->input('isSmoke');
+        $clinicalHistory->is_diabetes = $request->input('isDiabetes');
         $clinicalHistory->ldl_cholesterol = $request->input('ldlCholesterol');
         $clinicalHistory->metabolic_age = $request->input('metabolicAge');
         $clinicalHistory->neck_circumference = $request->input('neckCircumference');
         $clinicalHistory->percentage_body_fat = $request->input('percentageBodyFat');
-        $clinicalHistory->percentage_body_mass = $request->input('percentageBodyMass');
+        $clinicalHistory->muscle_mass = $request->input('muscleMass');
         $clinicalHistory->percentage_body_water = $request->input('percentageBodyWater');
-        $clinicalHistory->percentage_bone_mass = $request->input('percentageBoneMass');
+        $clinicalHistory->bone_mass = $request->input('boneMass');
         $clinicalHistory->percentage_visceral_fat = $request->input('percentageVisceralFat');
 //        $clinicalHistory->registered_at = $request->input('registeredAt');
         $clinicalHistory->registered_at = now();
@@ -126,16 +125,15 @@ class ClinicalHistoryController extends Controller
         $clinicalHistory->hdl_cholesterol = $request->input('hdlCholesterol');
         $clinicalHistory->heart_rate = $request->input('heartRate');
         $clinicalHistory->height = $request->input('height');
-        $clinicalHistory->imc = $request->input('weight') / $request->input('height') * $request->input('height');
-        $patient->is_smoke = $request->input('isSmoke');
-        $patient->is_diabetes = $request->input('isDiabetes');
+        $clinicalHistory->is_smoke = $request->input('isSmoke');
+        $clinicalHistory->is_diabetes = $request->input('isDiabetes');
         $clinicalHistory->ldl_cholesterol = $request->input('ldlCholesterol');
         $clinicalHistory->metabolic_age = $request->input('metabolicAge');
         $clinicalHistory->neck_circumference = $request->input('neckCircumference');
         $clinicalHistory->percentage_body_fat = $request->input('percentageBodyFat');
-        $clinicalHistory->percentage_body_mass = $request->input('percentageBodyMass');
+        $clinicalHistory->muscle_mass = $request->input('muscleMass');
         $clinicalHistory->percentage_body_water = $request->input('percentageBodyWater');
-        $clinicalHistory->percentage_bone_mass = $request->input('percentageBoneMass');
+        $clinicalHistory->bone_mass = $request->input('boneMass');
         $clinicalHistory->percentage_visceral_fat = $request->input('percentageVisceralFat');
 //        $clinicalHistory->registered_at = $request->input('registeredAt');
         $clinicalHistory->registered_at = now();
@@ -154,13 +152,4 @@ class ClinicalHistoryController extends Controller
             ])
             ->response()->setStatusCode(201);
     }
-
-    private function calculateImc($weight, $height)
-    {
-        if (isset($weight) && isset($height)) {
-            return $weight / $height * $height;
-        }
-        return null;
-    }
-
 }

@@ -28,6 +28,11 @@ class CreateAppClinicalHistoriesTable extends Migration
                 ->nullable()
                 ->comment('En latidos/minutos');
 
+            $table->double('bone_mass')
+                ->nullable()
+                ->comment('En porcentaje, Ej. 50');
+
+
             $table->double('glucose')
                 ->nullable()
                 ->comment('En mg/dl');
@@ -43,10 +48,6 @@ class CreateAppClinicalHistoriesTable extends Migration
             $table->double('height')
                 ->nullable()
                 ->comment('En metros');
-
-            $table->double('imc')
-                ->nullable()
-                ->comment('En kg/m2');
 
             $table->boolean('is_smoke')
                 ->nullable()
@@ -64,6 +65,10 @@ class CreateAppClinicalHistoriesTable extends Migration
                 ->nullable()
                 ->comment('En años');
 
+            $table->double('muscle_mass')
+                ->nullable()
+                ->comment('En kilogramos, Ej. 50');
+
             $table->double('neck_circumference')
                 ->nullable()
                 ->comment('En centimetros');
@@ -72,15 +77,7 @@ class CreateAppClinicalHistoriesTable extends Migration
                 ->nullable()
                 ->comment('En porcentaje, Ej. 50');
 
-            $table->double('percentage_body_mass')
-                ->nullable()
-                ->comment('En porcentaje, Ej. 50');
-
             $table->double('percentage_body_water')
-                ->nullable()
-                ->comment('En porcentaje, Ej. 50');
-
-            $table->double('percentage_bone_mass')
                 ->nullable()
                 ->comment('En porcentaje, Ej. 50');
 

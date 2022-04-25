@@ -10,7 +10,9 @@ use App\Http\Resources\V1\App\Patients\PatientResource;
 use App\Http\Resources\V1\App\UserPatients\UserPatientResource;
 use App\Http\Resources\V1\Core\Users\UserResource;
 use App\Models\App\ClinicalHistory;
+use App\Models\App\FraminghamTable;
 use App\Models\App\Patient;
+use App\Models\App\ReferenceValue;
 use App\Models\Authentication\User;
 use App\Models\Core\Catalogue;
 use Illuminate\Http\Request;
@@ -154,108 +156,225 @@ class PatientController extends Controller
             ->response()->setStatusCode(201);
     }
 
-    public function storeClinicalHistory(Request $request, Patient $patient)
+    public function showLastClinicalHistory(Patient $patient)
     {
-        $patient->is_smoke = $request->input('isSmoke');
-        $patient->save();
+        $user = $patient->user()->with('sex')->first();
 
-        $clinicalHistory = new ClinicalHistory();
-        $clinicalHistory->patient()->associate($patient);
-        $clinicalHistory->basal_metabolic_rate = $request->input('basalMetabolicRate');
-        $clinicalHistory->blood_pressure = $request->input('bloodPressure');
-        $clinicalHistory->breathing_frequency = $request->input('breathingFrequency');
-        $clinicalHistory->glucose = $request->input('glucose');
-        $clinicalHistory->hdl_cholesterol = $request->input('hdlCholesterol');
-        $clinicalHistory->heart_rate = $request->input('heartRate');
-        $clinicalHistory->height = $request->input('height');
-        $clinicalHistory->imc = $this->calculateImc($request->input('weight'), $request->input('height'));
-        $clinicalHistory->ldl_cholesterol = $request->input('ldlCholesterol');
-        $clinicalHistory->metabolic_age = $request->input('metabolicAge');
-        $clinicalHistory->neck_circumference = $request->input('neckCircumference');
-        $clinicalHistory->percentage_body_fat = $request->input('percentageBodyFat');
-        $clinicalHistory->percentage_body_mass = $request->input('percentageBodyMass');
-        $clinicalHistory->percentage_body_water = $request->input('percentageBodyWater');
-        $clinicalHistory->percentage_bone_mass = $request->input('percentageBoneMass');
-        $clinicalHistory->percentage_visceral_fat = $request->input('percentageVisceralFat');
-        $clinicalHistory->registered_at = $request->input('registeredAt');
-        $clinicalHistory->total_cholesterol = $request->input('totalCholesterol');
-        $clinicalHistory->waist_circumference = $request->input('waistCircumference');
-        $clinicalHistory->weight = $request->input('weight');
-        $clinicalHistory->save();
+        $clinicalHistory = $patient->clinicalHistories()
+            ->orderByDesc('registered_at')
+            ->first();
 
-        return (new ClinicalHistoryResource($clinicalHistory))
-            ->additional([
-                'msg' => [
-                    'summary' => 'success',
-                    'detail' => '',
-                    'code' => '201'
-                ]
-            ])
-            ->response()->setStatusCode(201);
+        $percentageBodyFat = $this->calculatePercentageBodyFat($user, $clinicalHistory);
+        $percentageBodyWater = $this->calculatePercentageBodyWater($user, $clinicalHistory);
+        $percentageVisceralFat = $this->calculatePercentageVisceralFat($user, $clinicalHistory);
+        $muscleMass = $this->calculateMuscleMass($user, $clinicalHistory);
+        $boneMass = $this->calculateBoneMass($user, $clinicalHistory);
+        $iceScore = $this->calculateIceScore($clinicalHistory);
+        $neckCircumferenceScore = $this->calculateNeckCircumferenceScore($user, $clinicalHistory);
+        $scores = $this->calculateFraminghamTable($user, $clinicalHistory);
+
+        $data = array(
+            'bodyFat' => $percentageBodyFat,
+            'percentageBodyWater' => $percentageBodyWater,
+            'percentageVisceralFat' => $percentageVisceralFat,
+            'muscleMass' => $muscleMass,
+            'boneMass' => $boneMass,
+            'ice' => $iceScore,
+            'neckCircumferenceScore' => $neckCircumferenceScore,
+            'scores' => $scores,
+        );
+
+        return response()->json([
+            'data' => json_decode(json_encode($data)),
+            'msg' => [
+                'summary' => 'Paciente actualizado',
+                'detail' => 'Se actualizó correctamente',
+                'code' => '201'
+            ]
+        ]);
     }
 
-    public function updateClinicalHistory(Request $request, Patient $patient, ClinicalHistory $clinicalHistory)
+    private function calculatePercentageBodyFat($user, $clinicalHistory)
     {
-        $patient->is_smoke = $request->input('isSmoke');
-        $patient->save();
+        $result = 'Falta Información';
 
-        $clinicalHistory->patient()->associate($patient);
-        $clinicalHistory->basal_metabolic_rate = $request->input('basalMetabolicRate');
-        $clinicalHistory->blood_pressure = $request->input('bloodPressure');
-        $clinicalHistory->breathing_frequency = $request->input('breathingFrequency');
-        $clinicalHistory->glucose = $request->input('glucose');
-        $clinicalHistory->hdl_cholesterol = $request->input('hdlCholesterol');
-        $clinicalHistory->heart_rate = $request->input('heartRate');
-        $clinicalHistory->height = $request->input('height');
-        $clinicalHistory->imc = $request->input('weight') / $request->input('height') * $request->input('height');
-        $clinicalHistory->ldl_cholesterol = $request->input('ldlCholesterol');
-        $clinicalHistory->metabolic_age = $request->input('metabolicAge');
-        $clinicalHistory->neck_circumference = $request->input('neckCircumference');
-        $clinicalHistory->percentage_body_fat = $request->input('percentageBodyFat');
-        $clinicalHistory->percentage_body_mass = $request->input('percentageBodyMass');
-        $clinicalHistory->percentage_body_water = $request->input('percentageBodyWater');
-        $clinicalHistory->percentage_bone_mass = $request->input('percentageBoneMass');
-        $clinicalHistory->percentage_visceral_fat = $request->input('percentageVisceralFat');
-        $clinicalHistory->registered_at = $request->input('registeredAt');
-        $clinicalHistory->total_cholesterol = $request->input('totalCholesterol');
-        $clinicalHistory->waist_circumference = $request->input('waistCircumference');
-        $clinicalHistory->weight = $request->input('weight');
-        $clinicalHistory->save();
-
-        return (new ClinicalHistoryResource($clinicalHistory))
-            ->additional([
-                'msg' => [
-                    'summary' => 'success',
-                    'detail' => '',
-                    'code' => '201'
-                ]
-            ])
-            ->response()->setStatusCode(201);
-    }
-
-    public function getClinicalHistories(Request $request, Patient $patient)
-    {
-        $clinicalHistories = $patient->clinicalHistories()
-            ->orderBy('registered_at')
-            ->get();
-
-        return (new ClinicalHistoryCollection($clinicalHistories))
-            ->additional([
-                'msg' => [
-                    'summary' => 'success',
-                    'detail' => '',
-                    'code' => '200'
-                ]
-            ])
-            ->response()->setStatusCode(200);
-    }
-
-    private function calculateImc($weight, $height)
-    {
-        if (isset($weight) && isset($height)) {
-            return $weight / $height * $height;
+        if (isset($clinicalHistory->percentage_body_fat)) {
+            $referenceValue = ReferenceValue::where('code', 'PBF')
+                ->where('sex', $user->sex->code)
+                ->where('age_min', '<=', $user->age)
+                ->where('age_max', '>=', $user->age)
+                ->where('value_min', '<=', $clinicalHistory->percentage_body_fat)
+                ->where('value_max', '>=', $clinicalHistory->percentage_body_fat)
+                ->first();
+            $result = $referenceValue->interpretation;
         }
-        return null;
+        return $result;
     }
 
+    private function calculatePercentageBodyWater($user, $clinicalHistory)
+    {
+        $result = 'Falta Información';
+
+        if (isset($clinicalHistory->percentage_body_water)) {
+            $referenceValue = ReferenceValue::where('code', 'PBW')
+                ->where('sex', $user->sex->code)
+                ->where('value_min', '<=', $clinicalHistory->percentage_body_water)
+                ->where('value_max', '>=', $clinicalHistory->percentage_body_water)
+                ->first();
+            $result = $referenceValue->interpretation;
+        }
+        return $result;
+    }
+
+    private function calculatePercentageVisceralFat($user, $clinicalHistory)
+    {
+        $result = 'Falta Información';
+
+        if (isset($clinicalHistory->percentage_visceral_fat)) {
+            $referenceValue = ReferenceValue::where('code', 'PVF')
+                ->where('sex', $user->sex->code)
+                ->where('value_min', '<=', $clinicalHistory->percentage_visceral_fat)
+                ->where('value_max', '>=', $clinicalHistory->percentage_visceral_fat)
+                ->first();
+            $result = $referenceValue->interpretation;
+        }
+        return $result;
+    }
+
+    private function calculateMuscleMass($user, $clinicalHistory)
+    {
+        $result = 'Falta Información';
+
+        if (isset($clinicalHistory->muscle_mass)) {
+            $referenceValue = ReferenceValue::where('code', 'MM')
+                ->where('sex', $user->sex->code)
+                ->where('age_min', '<=', $user->age)
+                ->where('age_max', '>=', $user->age)
+                ->where('value_min', '<=', $clinicalHistory->muscle_mass)
+                ->where('value_max', '>=', $clinicalHistory->muscle_mass)
+                ->first();
+            $result = $referenceValue->interpretation;
+        }
+        return $result;
+    }
+
+    private function calculateBoneMass($user, $clinicalHistory)
+    {
+        $result = 'Falta Información';
+
+        if (isset($clinicalHistory->bone_mass)) {
+            $referenceValue = ReferenceValue::where('code', 'BM')
+                ->where('sex', $user->sex->code)
+                ->where('weight_min', '<=', $clinicalHistory->weight)
+                ->where('weight_max', '>=', $clinicalHistory->weight)
+                ->where('value_min', '<=', $clinicalHistory->bone_mass)
+                ->where('value_max', '>=', $clinicalHistory->bone_mass)
+                ->first();
+            $result = $referenceValue->interpretation;
+        }
+        return $result;
+    }
+
+    private function calculateFraminghamTable($user, $clinicalHistory)
+    {
+        $result = 'Falta Información';
+        $totalScore = 0;
+        if (isset($user->age,
+            $clinicalHistory->total_cholesterol,
+            $clinicalHistory->hdl_cholesterol,
+            $clinicalHistory->blood_pressure,
+            $clinicalHistory->is_diabetes,
+            $clinicalHistory->is_smoke)) {
+            $scoreAge = (FraminghamTable::where('code', 'AGE')
+                ->where('sex', $user->sex->code)
+                ->where('value_min', '<=', $user->age)
+                ->where('value_max', '>=', $user->age)
+                ->first())->score;
+
+            $scoreTotalCholesterol = (FraminghamTable::where('code', 'CHOLESTEROL')
+                ->where('sex', $user->sex->code)
+                ->where('value_min', '<=', $clinicalHistory->total_cholesterol)
+                ->where('value_max', '>=', $clinicalHistory->total_cholesterol)
+                ->first())->score;
+
+            $scoreHdlCholesterol = (FraminghamTable::where('code', 'HDL')
+                ->where('sex', $user->sex->code)
+                ->where('value_min', '<=', $clinicalHistory->hdl_cholesterol)
+                ->where('value_max', '>=', $clinicalHistory->hdl_cholesterol)
+                ->first())->score;
+
+            $scoreBloodPressure = (FraminghamTable::where('code', 'BLOOD_PRESSURE')
+                ->where('sex', $user->sex->code)
+                ->where('value_min', '<=', $clinicalHistory->blood_pressure)
+                ->where('value_max', '>=', $clinicalHistory->blood_pressure)
+                ->first())->score;
+
+            $scoreDiabetes = (FraminghamTable::where('code', 'DIABETES')
+                ->where('sex', $user->sex->code)
+                ->where('value_min', '<=', $clinicalHistory->is_diabetes ? 1 : 0)
+                ->where('value_max', '>=', $clinicalHistory->is_diabetes ? 1 : 0)
+                ->first())->score;
+
+            $scoreSmoke = (FraminghamTable::where('code', 'SMOKE')
+                ->where('sex', $user->sex->code)
+                ->where('value_min', '<=', $clinicalHistory->is_smoke ? 1 : 0)
+                ->where('value_max', '>=', $clinicalHistory->is_smoke ? 1 : 0)
+                ->first())->score;
+
+            $totalScore = $scoreAge + $scoreTotalCholesterol + $scoreHdlCholesterol + $scoreBloodPressure + $scoreDiabetes + $scoreSmoke;
+            return array(
+                'scoreAge' => $scoreAge,
+                'scoreTotalCholesterol' => $scoreTotalCholesterol,
+                'scoreHdlCholesterol' => $scoreHdlCholesterol,
+                'scoreBloodPressure' => $scoreBloodPressure,
+                'scoreDiabetes' => $scoreDiabetes,
+                'scoreSmoke' => $scoreSmoke,
+                'totalScore' => $totalScore,
+            );
+        }
+
+        return $result;
+    }
+
+    private function calculateIceScore($clinicalHistory)
+    {
+        $result = 'Falta Información';
+        if (isset($clinicalHistory->ice)) {
+            if ($clinicalHistory->ice < 0.5) {
+                $result = 'Bajo';
+            }
+            if ($clinicalHistory->ice >= 0.5 && $clinicalHistory->ice <= 0.54) {
+                $result = 'Moderado';
+            }
+            if ($clinicalHistory->ice >= 0.55) {
+                $result = 'Alto';
+            }
+        }
+        return $result;
+    }
+
+    private function calculateNeckCircumferenceScore($user, $clinicalHistory)
+    {
+        $result = 'Falta Información';
+        if (isset($user->sex, $clinicalHistory->neck_circumference)) {
+            if ($user->sex->code === 'MALE') {
+                if ($clinicalHistory->neck_circumference < 35) {
+                    $result = 'Moderado';
+                }
+                if ($clinicalHistory->neck_circumference >= 35) {
+                    $result = 'Severo RCV';
+                }
+            }
+
+            if ($user->sex->code === 'FEMALE') {
+                if ($clinicalHistory->neck_circumference < 32) {
+                    $result = 'Moderado';
+                }
+                if ($clinicalHistory->neck_circumference >= 32) {
+                    $result = 'Severo RCV';
+                }
+            }
+        }
+        return $result;
+    }
 }

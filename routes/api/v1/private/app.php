@@ -23,18 +23,19 @@ Route::apiResource('catalogues', CatalogueController::class);
 /***********************************************************************************************************************
  * PATIENTS
  **********************************************************************************************************************/
-//Route::controller(PatientController::class)->group(function () {
-//    Route::prefix('patients/{patient}')->group(function () {
-//        Route::post('clinical-histories','storeClinicalHistory');
-//        Route::put('clinical-histories/{clinical_history}','updateClinicalHistory');
-//        Route::get('clinical-histories','getClinicalHistories');
-//        Route::put('users','updatePatientUser');
-//    });
-//
-//    Route::prefix('patients')->group(function () {
-//
-//    });
-//});
+Route::controller(PatientController::class)->group(function () {
+    Route::prefix('patients/{patient}')->group(function () {
+        Route::post('clinical-histories','storeClinicalHistory');
+        Route::put('clinical-histories/{clinical_history}','updateClinicalHistory');
+        Route::get('clinical-histories/last','showLastClinicalHistory');
+        Route::get('clinical-histories','getClinicalHistories');
+        Route::put('users','updatePatientUser');
+    });
+
+    Route::prefix('patients')->group(function () {
+
+    });
+});
 
 Route::apiResource('patients', PatientController::class);
 
@@ -50,5 +51,5 @@ Route::controller(ClinicalHistoryController::class)->group(function () {
     });
 });
 
-//Route::apiResource('clinical-histories', ClinicalHistoryController::class);
+Route::apiResource('clinical-histories', ClinicalHistoryController::class);
 
