@@ -5,8 +5,9 @@ namespace App\Http\Resources\V1\Core\Users;
 use App\Http\Resources\V1\Authentication\RoleResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\V1\Core\Catalogues\CatalogueResource;
-Use App\Http\Resources\V1\Core\EmailResource;
-Use App\Http\Resources\V1\Core\PhoneResource;
+use App\Http\Resources\V1\Core\EmailResource;
+use App\Http\Resources\V1\Core\PhoneResource;
+
 class UserResource extends JsonResource
 {
     /**
@@ -30,7 +31,7 @@ class UserResource extends JsonResource
             'roles' => RoleResource::collection($this->roles),
             'sex' => CatalogueResource::make($this->sex),
             'bloodType' => CatalogueResource::make($this->bloodType),
-             'passwordChanged' => $this->password_changed,
+            'passwordChanged' => $this->password_changed,
             'suspended' => $this->suspended,
             'updatedAt' => $this->updated_at,
         ];

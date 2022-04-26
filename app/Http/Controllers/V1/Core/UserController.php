@@ -26,11 +26,10 @@ class UserController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('role:admin');
-        $this->middleware('permission:view-users')->only(['index', 'show']);
-        $this->middleware('permission:store-users')->only(['store']);
-        $this->middleware('permission:update-users')->only(['update']);
-        $this->middleware('permission:delete-users')->only(['destroy', 'destroys']);
+//        $this->middleware('permission:view-users')->only(['index', 'show']);
+//        $this->middleware('permission:store-users')->only(['store']);
+//        $this->middleware('permission:update-users')->only(['update']);
+//        $this->middleware('permission:delete-users')->only(['destroy', 'destroys']);
     }
 
     public function index(IndexUserRequest $request)
@@ -134,14 +133,16 @@ class UserController extends Controller
 
     public function update(UpdateUserRequest $request, User $user)
     {
+        $patient = $user->patient()->first();
         $user->sex()->associate(Catalogue::find($request->input('sex.id')));
-        $user->sector()->associate(Catalogue::find($request->input('sector.id')));
+        $patient->sector()->associate(Catalogue::find($request->input('sector.id')));
 
         $user->username = $request->input('username');
         $user->name = $request->input('name');
         $user->lastname = $request->input('lastname');
         $user->birthdate = $request->input('birthdate');
         $user->email = $request->input('email');
+        $user->phone = $request->input('phone');
 
         $user->save();
 
@@ -150,7 +151,7 @@ class UserController extends Controller
                 'msg' => [
                     'summary' => 'Usuario Actualizado',
                     'detail' => '',
-                    'code' => '200'
+                    'code' => '201'
                 ]
             ])
             ->response()->setStatusCode(201);
