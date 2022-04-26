@@ -4,6 +4,8 @@ namespace App\Http\Controllers\V1\App;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\App\Catalogues\IndexCatalogueRequest;
+use App\Http\Requests\V1\App\Patients\RegisterPatientUserRequest;
+use App\Http\Requests\V1\App\Patients\UpdatePatientUserRequest;
 use App\Http\Resources\V1\App\ClinicalHistories\ClinicalHistoryCollection;
 use App\Http\Resources\V1\App\ClinicalHistories\ClinicalHistoryResource;
 use App\Http\Resources\V1\App\Patients\PatientResource;
@@ -49,42 +51,21 @@ class PatientController extends Controller
             ]);
     }
 
-    public function registerPatientUser(Request $request)
+    public function registerPatientUser(RegisterPatientUserRequest $request)
     {
-        $user = User::where('username', $request->input('username'))
-            ->orWhere('email', $request->input('email'))->first();
-
-        if (isset($user) && $user->username === $request->input('username')) {
-            return response()->json([
-                'data' => null,
-                'msg' => [
-                    'summary' => 'El correo electrónico ya está en uso',
-                    'detail' => 'Intente con otro nombre de usuario',
-                    'code' => '200'
-                ]
-            ], 400);
-        }
-
-        if (isset($user) && $user->email === $request->input('email')) {
-            return response()->json([
-                'data' => null,
-                'msg' => [
-                    'summary' => 'El usuario ya se encuentra registrado',
-                    'detail' => 'Intente con otro correo electrónico',
-                    'code' => '200'
-                ]
-            ], 400);
-        }
-
         $user = new User();
+        $user->sex()->associate(Catalogue::find($request->input('sex.id')));
         $user->username = $request->input('username');
         $user->password = $request->input('password');
         $user->name = $request->input('name');
         $user->lastname = $request->input('lastname');
+        $user->birthdate = $request->input('birthdate');
         $user->email = $request->input('email');
         $user->phone = $request->input('phone');
 
+
         $patient = new Patient();
+        $patient->sector()->associate(Catalogue::find($request->input('sector.id')));
 
         DB::transaction(function () use ($request, $user, $patient) {
             $user->save();
@@ -104,33 +85,8 @@ class PatientController extends Controller
             ->response()->setStatusCode(201);
     }
 
-    public function updatePatientUser(Request $request, Patient $patient)
+    public function updatePatientUser(UpdatePatientUserRequest $request, Patient $patient)
     {
-//        $user = User::where('username', $request->input('username'))
-//            ->orWhere('email', $request->input('email'))->first();
-//
-//        if (isset($user) && $user->username === $request->input('username')) {
-//            return (new UserResource($user))
-//                ->additional([
-//                    'msg' => [
-//                        'summary' => 'El usuario ya se encuentra registrado',
-//                        'detail' => 'Intente con otro nombre de usuario',
-//                        'code' => '200'
-//                    ]
-//                ])
-//                ->response()->setStatusCode(400);
-//        }
-//
-//        if (isset($user) && $user->email === $request->input('email')) {
-//            return (new UserResource($user))
-//                ->additional([
-//                    'msg' => [
-//                        'summary' => 'El correo electrónico ya está en uso',
-//                        'detail' => 'Intente con otro correo electrónico',
-//                        'code' => '200'
-//                    ]
-//                ])->response()->setStatusCode(400);
-//        }
         $user = $patient->user()->first();
         $user->username = $request->input('username');
         $user->name = $request->input('name');
@@ -155,6 +111,19 @@ class PatientController extends Controller
                 ]
             ])
             ->response()->setStatusCode(201);
+    }
+
+    public function show(Patient $patient)
+    {
+        return (new PatientResource($patient))
+            ->additional([
+                'msg' => [
+                    'summary' => 'success',
+                    'detail' => '',
+                    'code' => '200'
+                ]
+            ])
+            ->response()->setStatusCode(200);
     }
 
     public function showLastClinicalHistory(Patient $patient)

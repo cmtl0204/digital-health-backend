@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\V1\App;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\V1\App\Catalogues\CatalogueCatalogueRequest;
+use App\Http\Requests\V1\App\Catalogues\UpdatePatientUserRequest;
 use App\Http\Requests\V1\App\Catalogues\IndexCatalogueRequest;
 use App\Http\Resources\V1\App\Catalogues\CatalogueCollection;
 use App\Models\App\Catalogue;
@@ -35,7 +35,7 @@ class CatalogueController extends Controller
             ]);
     }
 
-    public function catalogue(CatalogueCatalogueRequest $request)
+    public function catalogue(UpdatePatientUserRequest $request)
     {
         $sorts = explode(',', $request->sort);
         $catalogues = Catalogue::customOrderBy($sorts)

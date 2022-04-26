@@ -4,6 +4,7 @@ namespace App\Http\Resources\V1\App\Patients;
 
 use App\Http\Resources\V1\App\Catalogues\CatalogueResource;
 use App\Http\Resources\V1\App\ClinicalHistories\ClinicalHistoryResource;
+use App\Http\Resources\V1\Core\Users\UserResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PatientResource extends JsonResource
@@ -20,8 +21,8 @@ class PatientResource extends JsonResource
         return [
             'id' => $this->id,
             'sector' => CatalogueResource::make($this->sector) ,
-            'clinicalHistories' => ClinicalHistoryResource::collection($this->clinicalHistories) ,
-            'is_smoke' => $this->is_smoke,
+            'user' => UserResource::make($this->user) ,
+//            'clinicalHistories' => ClinicalHistoryResource::collection($this->clinicalHistories) ,
         ];
     }
 }
