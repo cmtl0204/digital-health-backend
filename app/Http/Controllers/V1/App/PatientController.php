@@ -152,7 +152,7 @@ class PatientController extends Controller
             'ice' => $iceScore,
             'neckCircumference' => $neckCircumference,
             'risk' => $scores,
-            'scores' => $scores,
+//            'scores' => $scores,
         );
 
         return response()->json([
@@ -169,7 +169,7 @@ class PatientController extends Controller
     {
         $result = 'Falta Información';
 
-        if (isset($clinicalHistory->percentage_body_fat)) {
+        if (isset($clinicalHistory->percentage_body_fat,$user->sex)) {
             $referenceValue = ReferenceValue::where('code', 'PBF')
                 ->where('sex', $user->sex->code)
                 ->where('age_min', '<=', $user->age)
@@ -189,7 +189,7 @@ class PatientController extends Controller
     {
         $result = 'Falta Información';
 
-        if (isset($clinicalHistory->percentage_body_water)) {
+        if (isset($clinicalHistory->percentage_body_water,$user->sex)) {
             $referenceValue = ReferenceValue::where('code', 'PBW')
                 ->where('sex', $user->sex->code)
                 ->where('value_min', '<=', $clinicalHistory->percentage_body_water)
@@ -207,7 +207,7 @@ class PatientController extends Controller
     {
         $result = 'Falta Información';
 
-        if (isset($clinicalHistory->percentage_visceral_fat)) {
+        if (isset($clinicalHistory->percentage_visceral_fat,$user->sex)) {
             $referenceValue = ReferenceValue::where('code', 'PVF')
                 ->where('sex', $user->sex->code)
                 ->where('value_min', '<=', $clinicalHistory->percentage_visceral_fat)
@@ -225,7 +225,7 @@ class PatientController extends Controller
     {
         $result = 'Falta Información';
 
-        if (isset($clinicalHistory->muscle_mass)) {
+        if (isset($clinicalHistory->muscle_mass,$user->sex)) {
             $referenceValue = ReferenceValue::where('code', 'MM')
                 ->where('sex', $user->sex->code)
                 ->where('age_min', '<=', $user->age)
@@ -245,7 +245,7 @@ class PatientController extends Controller
     {
         $result = 'Falta Información';
 
-        if (isset($clinicalHistory->bone_mass)) {
+        if (isset($clinicalHistory->bone_mass,$user->sex)) {
             $referenceValue = ReferenceValue::where('code', 'BM')
                 ->where('sex', $user->sex->code)
                 ->where('weight_min', '<=', $clinicalHistory->weight)
@@ -266,6 +266,7 @@ class PatientController extends Controller
         $result = 'Falta Información';
         $totalScore = 0;
         if (isset($user->age,
+            $user->sex,
             $clinicalHistory->total_cholesterol,
             $clinicalHistory->hdl_cholesterol,
             $clinicalHistory->blood_pressure,
@@ -316,7 +317,7 @@ class PatientController extends Controller
                 ->where('value_max', '>=', $totalScore)
                 ->first();
 
-            return $risk;
+            return isset($risk) ? $risk->interpretation : 'Sin Riesgo';
             return array(
                 'scoreAge' => $scoreAge,
                 'scoreTotalCholesterol' => $scoreTotalCholesterol,
