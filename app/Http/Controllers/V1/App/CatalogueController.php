@@ -7,6 +7,7 @@ use App\Http\Requests\V1\App\Catalogues\UpdatePatientUserRequest;
 use App\Http\Requests\V1\App\Catalogues\IndexCatalogueRequest;
 use App\Http\Resources\V1\App\Catalogues\CatalogueCollection;
 use App\Models\App\Catalogue;
+use Illuminate\Http\Request;
 
 class CatalogueController extends Controller
 {
@@ -35,7 +36,7 @@ class CatalogueController extends Controller
             ]);
     }
 
-    public function catalogue(UpdatePatientUserRequest $request)
+    public function catalogue(Request $request)
     {
         $sorts = explode(',', $request->sort);
         $catalogues = Catalogue::customOrderBy($sorts)

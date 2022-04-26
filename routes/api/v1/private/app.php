@@ -28,6 +28,7 @@ Route::controller(PatientController::class)->group(function () {
         Route::post('clinical-histories','storeClinicalHistory');
         Route::put('clinical-histories/{clinical_history}','updateClinicalHistory');
         Route::get('clinical-histories/last','showLastClinicalHistory');
+        Route::get('clinical-histories/results','showResultsLastClinicalHistory');
         Route::get('clinical-histories','getClinicalHistories');
         Route::put('users','updatePatientUser');
     });
