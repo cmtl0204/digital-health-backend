@@ -182,6 +182,7 @@ class PatientController extends Controller
             'boneMass' => $boneMass,
             'ice' => $iceScore,
             'neckCircumference' => $neckCircumference,
+            'risk' => $scores,
             'scores' => $scores,
         );
 
@@ -346,6 +347,7 @@ class PatientController extends Controller
                 ->where('value_max', '>=', $totalScore)
                 ->first();
 
+            return $risk;
             return array(
                 'scoreAge' => $scoreAge,
                 'scoreTotalCholesterol' => $scoreTotalCholesterol,

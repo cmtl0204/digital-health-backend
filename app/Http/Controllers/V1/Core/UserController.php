@@ -134,12 +134,8 @@ class UserController extends Controller
 
     public function update(UpdateUserRequest $request, User $user)
     {
-        $user->identificationType()->associate(Catalogue::find($request->input('identificationType.id')));
         $user->sex()->associate(Catalogue::find($request->input('sex.id')));
-        $user->gender()->associate(Catalogue::find($request->input('gender.id')));
-        $user->bloodType()->associate(Catalogue::find($request->input('bloodType.id')));
-        $user->ethnicOrigin()->associate(Catalogue::find($request->input('ethnicOrigin.id')));
-        $user->civilStatus()->associate(Catalogue::find($request->input('civilStatus.id')));
+        $user->sector()->associate(Catalogue::find($request->input('sector.id')));
 
         $user->username = $request->input('username');
         $user->name = $request->input('name');
@@ -148,10 +144,6 @@ class UserController extends Controller
         $user->email = $request->input('email');
 
         $user->save();
-        $user->syncRoles($request->input('role.name'));
-
-//        $user->addPhones($request->input('phones'));
-//        $user->addEmails($request->input('emails'));
 
         return (new UserResource($user))
             ->additional([
