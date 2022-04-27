@@ -60,7 +60,7 @@ class ClinicalHistory extends Model implements Auditable
     public function getIceAttribute()
     {
         if ($this->attributes['height']) {
-            return $this->attributes['waist_circumference'] / $this->attributes['height'] * 100;
+            return $this->attributes['waist_circumference'] / ($this->attributes['height'] * 100);
         }
         return null;
     }

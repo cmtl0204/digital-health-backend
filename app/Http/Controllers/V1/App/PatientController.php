@@ -267,8 +267,8 @@ class PatientController extends Controller
         return (new ClinicalHistoryResource($clinicalHistory))
             ->additional([
                 'msg' => [
-                    'summary' => 'success',
-                    'detail' => '',
+                    'summary' => 'Datos Actualizados',
+                    'detail' => 'Los datos se actualizaron correctamente',
                     'code' => '201'
                 ]
             ])
