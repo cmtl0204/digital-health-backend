@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\V1\Authentication;
 
+use App\Http\Resources\V1\App\Patients\PatientResource;
 use App\Http\Resources\V1\Core\Users\UserResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -20,7 +21,7 @@ class AuthResource extends JsonResource
             'permissions' => PermissionResource::collection($this->permissions),
             'user' => UserResource::make($this->resource),
             'tokens' => PersonalAccessTokenResource::collection($this->tokens),
-//            'app' => ProfessionalResource::make($this->app),
+            'patient' => PatientResource::make($this->patient),
         ];
     }
 }

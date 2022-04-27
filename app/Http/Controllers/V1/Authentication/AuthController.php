@@ -93,12 +93,12 @@ class AuthController extends Controller
             if ($userSocialite->user['verified_email']) {
                 $user->markEmailAsVerified();
             }
-            $token = $user->createToken($userSocialite->getEmail())->accessToken;
-            $url = "http://frontend-ignug.test:4200/#/auth/login?username={$user->username}&token={$token}";
+            $token = $user->createToken($userSocialite->getEmail())->plainTextToken;
+            $url = "http://localhost:8100/login?username={$user->username}&token={$token}";
             return redirect()->to($url);
         }
 
-        $url = "http://frontend-ignug.test:4200/#/auth/unregistered-user?email={$userSocialite->getEmail()}";
+        $url = "http://localhost:8100/#/auth/unregistered-user?email={$userSocialite->getEmail()}";
 //            ."&given_name={$userSocialite->user['given_name']}" .
 //            "&family_name={$userSocialite->user['family_name']}";
 
