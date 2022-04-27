@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\V1\App;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\V1\App\Catalogues\UpdatePatientUserRequest;
 use App\Http\Requests\V1\App\Catalogues\IndexCatalogueRequest;
 use App\Http\Resources\V1\App\Catalogues\CatalogueCollection;
 use App\Models\App\Catalogue;
@@ -42,7 +41,7 @@ class CatalogueController extends Controller
         $catalogues = Catalogue::customOrderBy($sorts)
             ->description($request->input('search'))
             ->name($request->input('search'))
-            ->type($request->input('search'))
+            ->type($request->input('type'))
             ->limit(1000)
             ->get();
 

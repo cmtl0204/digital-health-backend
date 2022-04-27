@@ -42,7 +42,7 @@ class CatalogueController extends Controller
             ->description($request->input('name'))
             ->name($request->input('name'))
             ->type($request->input('type'))
-            ->paginate($request->input('per_page'));
+            ->get();
 
         return (new CatalogueCollection($catalogues))
             ->additional([

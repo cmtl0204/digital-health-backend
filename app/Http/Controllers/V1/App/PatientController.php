@@ -9,6 +9,7 @@ use App\Http\Requests\V1\App\Patients\UpdatePatientUserRequest;
 use App\Http\Resources\V1\App\ClinicalHistories\ClinicalHistoryCollection;
 use App\Http\Resources\V1\App\ClinicalHistories\ClinicalHistoryResource;
 use App\Http\Resources\V1\App\Patients\PatientResource;
+use App\Http\Resources\V1\App\Patients\ProfileResource;
 use App\Http\Resources\V1\App\UserPatients\UserPatientResource;
 use App\Http\Resources\V1\Core\Users\UserResource;
 use App\Models\App\ClinicalHistory;
@@ -88,6 +89,7 @@ class PatientController extends Controller
     public function updatePatientUser(UpdatePatientUserRequest $request, Patient $patient)
     {
         $user = $patient->user()->first();
+        $user->sex()->associate(Catalogue::find($request->input('sex.id')));
         $user->username = $request->input('username');
         $user->name = $request->input('name');
         $user->lastname = $request->input('lastname');
@@ -102,7 +104,7 @@ class PatientController extends Controller
             $patient->save();
         });
 
-        return (new UserPatientResource($user))
+        return (new ProfileResource($patient))
             ->additional([
                 'msg' => [
                     'summary' => 'Paciente actualizado',
@@ -116,6 +118,19 @@ class PatientController extends Controller
     public function show(Patient $patient)
     {
         return (new PatientResource($patient))
+            ->additional([
+                'msg' => [
+                    'summary' => 'success',
+                    'detail' => '',
+                    'code' => '200'
+                ]
+            ])
+            ->response()->setStatusCode(200);
+    }
+
+    public function profile(Patient $patient)
+    {
+        return (new ProfileResource($patient))
             ->additional([
                 'msg' => [
                     'summary' => 'success',

@@ -30,6 +30,7 @@ Route::controller(PatientController::class)->group(function () {
         Route::get('clinical-histories/last','showLastClinicalHistory');
         Route::get('clinical-histories/results','showResultsLastClinicalHistory');
         Route::get('clinical-histories','getClinicalHistories');
+        Route::get('profile','profile');
         Route::put('users','updatePatientUser');
     });
 

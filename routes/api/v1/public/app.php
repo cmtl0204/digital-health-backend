@@ -2,12 +2,13 @@
 
 use App\Http\Controllers\V1\App\PatientController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\V1\App\CatalogueController;
+use App\Http\Controllers\V1\App\CatalogueController as AppCatalogueController;
+use App\Http\Controllers\V1\Core\CatalogueController as CoreCatalogueController;
 
 /***********************************************************************************************************************
- * CATALOGUES
+ * APP CATALOGUES
  **********************************************************************************************************************/
-Route::controller(CatalogueController::class)->group(function () {
+Route::controller(AppCatalogueController::class)->group(function () {
     Route::prefix('app-catalogues/{catalogue}')->group(function () {
 
     });
@@ -17,7 +18,18 @@ Route::controller(CatalogueController::class)->group(function () {
     });
 });
 
-Route::apiResource('app-catalogues', CatalogueController::class);
+/***********************************************************************************************************************
+ * APP CATALOGUES
+ **********************************************************************************************************************/
+Route::controller(CoreCatalogueController::class)->group(function () {
+    Route::prefix('core-catalogues/{catalogue}')->group(function () {
+
+    });
+
+    Route::prefix('core-catalogues')->group(function () {
+        Route::get('catalogue', 'catalogue');
+    });
+});
 
 /***********************************************************************************************************************
  * PATIENTS
