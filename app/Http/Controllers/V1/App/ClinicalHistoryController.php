@@ -75,5 +75,21 @@ class ClinicalHistoryController extends Controller
             ->response()->setStatusCode(200);
     }
 
+    public function getByPatient(Patient $patient)
+    {
+        $clinicalHistories = $patient->clinicalHistories()
+            ->orderBy('registered_at')
+            ->get();
+
+        return (new ClinicalHistoryCollection($clinicalHistories))
+            ->additional([
+                'msg' => [
+                    'summary' => 'success',
+                    'detail' => '',
+                    'code' => '200'
+                ]
+            ])
+            ->response()->setStatusCode(200);
+    }
 
 }

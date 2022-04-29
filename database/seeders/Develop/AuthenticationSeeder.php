@@ -97,18 +97,22 @@ class AuthenticationSeeder extends Seeder
     {
         $identificationTypes = Catalogue::where('type', 'IDENTIFICATION_PROFESSIONAL_TYPE')->get();
         $sexes = Catalogue::where('type', 'SEX_TYPE')->get();
+        $genders = Catalogue::where('type', 'GENDER_TYPE')->get();
         $userFactory = User::factory(3)->sequence(
             [
                 'username' => '1234567891',
-                'sex_id' => $sexes[rand(0, $sexes->count() - 1)]
+                'sex_id' => $sexes[rand(0, $sexes->count() - 1)],
+                'gender_id' => $genders[rand(0, $sexes->count() - 1)]
             ],
             [
                 'username' => '1234567892',
-                'sex_id' => $sexes[rand(0, $sexes->count() - 1)]
+                'sex_id' => $sexes[rand(0, $sexes->count() - 1)],
+                'gender_id' => $genders[rand(0, $sexes->count() - 1)]
             ],
             [
                 'username' => '1234567893',
-                'sex_id' => $sexes[rand(0, $sexes->count() - 1)]
+                'sex_id' => $sexes[rand(0, $sexes->count() - 1)],
+                'gender_id' => $genders[rand(0, $sexes->count() - 1)]
             ]
         )->create();
     }

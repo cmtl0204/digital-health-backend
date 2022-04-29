@@ -15,7 +15,7 @@ class CreateAppFraminghamTablesTable extends Migration
                 ->nullable()
                 ->comment('');
 
-            $table->enum('sex', ['MALE', 'FEMALE'])
+            $table->enum('gender', ['MALE', 'FEMALE'])
                 ->nullable()
                 ->comment('');
 

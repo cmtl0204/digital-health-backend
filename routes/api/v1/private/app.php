@@ -44,6 +44,7 @@ Route::apiResource('patients', PatientController::class);
 Route::controller(ClinicalHistoryController::class)->group(function () {
     Route::prefix('clinical-histories/{clinical_history}')->group(function () {
         Route::put('patients/{patient}','update');
+        Route::get('patients/{patient}','getByPatient');
     });
 
     Route::prefix('clinical-histories')->group(function () {

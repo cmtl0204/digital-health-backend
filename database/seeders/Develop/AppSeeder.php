@@ -85,7 +85,7 @@ class AppSeeder extends Seeder
     private function createReferenceValues()
     {
         DB::select("insert into app.reference_values(
-                                 code,sex,age_min,age_max,weight_min,weight_max,value_min,value_max,interpretation,level)
+                                 code,gender,age_min,age_max,weight_min,weight_max,value_min,value_max,interpretation,level)
 values
        ('PBF','MALE',18,39,null,null,0,8,'Bajo en grasa',1),
 ('PBF','MALE',18,39,null,null,9,20,'Normal',2),
@@ -162,7 +162,7 @@ values
     private function createFraminghamTable()
     {
         DB::select("insert into app.framingham_tables(
-                                 code,sex,value_min,value_max,score)
+                                 code,gender,value_min,value_max,score)
                                  values
 ('AGE','MALE',0,34,-1),
 ('AGE','MALE',35,39,0),
@@ -225,7 +225,7 @@ values
     private function createRisksTable()
     {
         DB::select("insert into app.risks(
-                                 percentage,sex,age_min,age_max,value_min,value_max,interpretation,score,level)
+                                 percentage,gender,age_min,age_max,value_min,value_max,interpretation,score,level)
                                  values
 (2,'MALE',30,34,0,0,'Riesgo menor al promedio',1,1),
 (2,'MALE',30,34,1,1,'Riesgo promedio',1.5,2),

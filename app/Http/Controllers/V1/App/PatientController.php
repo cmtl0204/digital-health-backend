@@ -55,7 +55,7 @@ class PatientController extends Controller
     public function registerPatientUser(RegisterPatientUserRequest $request)
     {
         $user = new User();
-        $user->sex()->associate(Catalogue::find($request->input('sex.id')));
+        $user->gender()->associate(Catalogue::find($request->input('gender.id')));
         $user->username = $request->input('username');
         $user->password = $request->input('password');
         $user->name = $request->input('name');
@@ -89,7 +89,7 @@ class PatientController extends Controller
     public function updatePatientUser(UpdatePatientUserRequest $request, Patient $patient)
     {
         $user = $patient->user()->first();
-        $user->sex()->associate(Catalogue::find($request->input('sex.id')));
+        $user->gender()->associate(Catalogue::find($request->input('gender.id')));
         $user->username = $request->input('username');
         $user->name = $request->input('name');
         $user->lastname = $request->input('lastname');
@@ -143,7 +143,7 @@ class PatientController extends Controller
 
     public function showResultsLastClinicalHistory(Patient $patient)
     {
-        $user = $patient->user()->with('sex')->first();
+        $user = $patient->user()->with('gender')->first();
 
         $clinicalHistory = $patient->clinicalHistories()
             ->orderByDesc('registered_at')
@@ -279,16 +279,16 @@ class PatientController extends Controller
     {
         $result = 'Falta Información';
 
-        if (isset($clinicalHistory->percentage_body_fat, $user->sex)) {
+        if (isset($clinicalHistory->percentage_body_fat, $user->gender)) {
             $referenceValue = ReferenceValue::where('code', 'PBF')
-                ->where('sex', $user->sex->code)
+                ->where('gender', $user->gender->code)
                 ->where('age_min', '<=', $user->age)
                 ->where('age_max', '>=', $user->age)
                 ->where('value_min', '<=', $clinicalHistory->percentage_body_fat)
                 ->where('value_max', '>=', $clinicalHistory->percentage_body_fat)
                 ->first();
             if ($referenceValue)
-                $result = $referenceValue->interpretation;
+                $result = $referenceValue;
             else
                 $result = 'Fuera del Rango';
         }
@@ -299,14 +299,14 @@ class PatientController extends Controller
     {
         $result = 'Falta Información';
 
-        if (isset($clinicalHistory->percentage_body_water, $user->sex)) {
+        if (isset($clinicalHistory->percentage_body_water, $user->gender)) {
             $referenceValue = ReferenceValue::where('code', 'PBW')
-                ->where('sex', $user->sex->code)
+                ->where('gender', $user->gender->code)
                 ->where('value_min', '<=', $clinicalHistory->percentage_body_water)
                 ->where('value_max', '>=', $clinicalHistory->percentage_body_water)
                 ->first();
             if ($referenceValue)
-                $result = $referenceValue->interpretation;
+                $result = $referenceValue;
             else
                 $result = 'Fuera del Rango';
         }
@@ -317,14 +317,14 @@ class PatientController extends Controller
     {
         $result = 'Falta Información';
 
-        if (isset($clinicalHistory->percentage_visceral_fat, $user->sex)) {
+        if (isset($clinicalHistory->percentage_visceral_fat, $user->gender)) {
             $referenceValue = ReferenceValue::where('code', 'PVF')
-                ->where('sex', $user->sex->code)
+                ->where('gender', $user->gender->code)
                 ->where('value_min', '<=', $clinicalHistory->percentage_visceral_fat)
                 ->where('value_max', '>=', $clinicalHistory->percentage_visceral_fat)
                 ->first();
             if ($referenceValue)
-                $result = $referenceValue->interpretation;
+                $result = $referenceValue;
             else
                 $result = 'Fuera del Rango';
         }
@@ -335,16 +335,16 @@ class PatientController extends Controller
     {
         $result = 'Falta Información';
 
-        if (isset($clinicalHistory->muscle_mass, $user->sex)) {
+        if (isset($clinicalHistory->muscle_mass, $user->gender)) {
             $referenceValue = ReferenceValue::where('code', 'MM')
-                ->where('sex', $user->sex->code)
+                ->where('gender', $user->gender->code)
                 ->where('age_min', '<=', $user->age)
                 ->where('age_max', '>=', $user->age)
                 ->where('value_min', '<=', $clinicalHistory->muscle_mass)
                 ->where('value_max', '>=', $clinicalHistory->muscle_mass)
                 ->first();
             if ($referenceValue)
-                $result = $referenceValue->interpretation;
+                $result = $referenceValue;
             else
                 $result = 'Fuera del Rango';
         }
@@ -355,16 +355,16 @@ class PatientController extends Controller
     {
         $result = 'Falta Información';
 
-        if (isset($clinicalHistory->bone_mass, $user->sex)) {
+        if (isset($clinicalHistory->bone_mass, $user->gender)) {
             $referenceValue = ReferenceValue::where('code', 'BM')
-                ->where('sex', $user->sex->code)
+                ->where('gender', $user->gender->code)
                 ->where('weight_min', '<=', $clinicalHistory->weight)
                 ->where('weight_max', '>=', $clinicalHistory->weight)
                 ->where('value_min', '<=', $clinicalHistory->bone_mass)
                 ->where('value_max', '>=', $clinicalHistory->bone_mass)
                 ->first();
             if ($referenceValue)
-                $result = $referenceValue->interpretation;
+                $result = $referenceValue;
             else
                 $result = 'Fuera del Rango';
         }
@@ -376,58 +376,58 @@ class PatientController extends Controller
         $result = 'Falta Información';
         $totalScore = 0;
         if (isset($user->age,
-            $user->sex,
+            $user->gender,
             $clinicalHistory->total_cholesterol,
             $clinicalHistory->hdl_cholesterol,
             $clinicalHistory->blood_pressure,
             $clinicalHistory->is_diabetes,
             $clinicalHistory->is_smoke)) {
             $scoreAge = (FraminghamTable::where('code', 'AGE')
-                ->where('sex', $user->sex->code)
+                ->where('gender', $user->gender->code)
                 ->where('value_min', '<=', $user->age)
                 ->where('value_max', '>=', $user->age)
                 ->first())->score;
 
             $scoreTotalCholesterol = (FraminghamTable::where('code', 'CHOLESTEROL')
-                ->where('sex', $user->sex->code)
+                ->where('gender', $user->gender->code)
                 ->where('value_min', '<=', $clinicalHistory->total_cholesterol)
                 ->where('value_max', '>=', $clinicalHistory->total_cholesterol)
                 ->first())->score;
 
             $scoreHdlCholesterol = (FraminghamTable::where('code', 'HDL')
-                ->where('sex', $user->sex->code)
+                ->where('gender', $user->gender->code)
                 ->where('value_min', '<=', $clinicalHistory->hdl_cholesterol)
                 ->where('value_max', '>=', $clinicalHistory->hdl_cholesterol)
                 ->first())->score;
 
             $scoreBloodPressure = (FraminghamTable::where('code', 'BLOOD_PRESSURE')
-                ->where('sex', $user->sex->code)
+                ->where('gender', $user->gender->code)
                 ->where('value_min', '<=', $clinicalHistory->blood_pressure)
                 ->where('value_max', '>=', $clinicalHistory->blood_pressure)
                 ->first())->score;
 
             $scoreDiabetes = (FraminghamTable::where('code', 'DIABETES')
-                ->where('sex', $user->sex->code)
+                ->where('gender', $user->gender->code)
                 ->where('value_min', '<=', $clinicalHistory->is_diabetes ? 1 : 0)
                 ->where('value_max', '>=', $clinicalHistory->is_diabetes ? 1 : 0)
                 ->first())->score;
 
             $scoreSmoke = (FraminghamTable::where('code', 'SMOKE')
-                ->where('sex', $user->sex->code)
+                ->where('gender', $user->gender->code)
                 ->where('value_min', '<=', $clinicalHistory->is_smoke ? 1 : 0)
                 ->where('value_max', '>=', $clinicalHistory->is_smoke ? 1 : 0)
                 ->first())->score;
 
             $totalScore = $scoreAge + $scoreTotalCholesterol + $scoreHdlCholesterol + $scoreBloodPressure + $scoreDiabetes + $scoreSmoke;
 
-            $risk = Risk::where('sex', $user->sex->code)
+            $risk = Risk::where('gender', $user->gender->code)
                 ->where('age_min', '<=', $user->age)
                 ->where('age_max', '>=', $user->age)
                 ->where('value_min', '<=', $totalScore)
                 ->where('value_max', '>=', $totalScore)
                 ->first();
 
-            return isset($risk) ? $risk->interpretation : 'Sin Riesgo';
+            return isset($risk) ? $risk : 'Sin Riesgo';
             return array(
                 'scoreAge' => $scoreAge,
                 'scoreTotalCholesterol' => $scoreTotalCholesterol,
@@ -446,16 +446,25 @@ class PatientController extends Controller
     private function calculateIceScore($clinicalHistory)
     {
         $result = 'Falta Información';
+        $interpretation = '';
+        $level = null;
         if (isset($clinicalHistory->ice)) {
             if ($clinicalHistory->ice < 0.5) {
-                $result = 'Bajo';
+                $interpretation = 'Bajo';
+                $level = 1;
             }
             if ($clinicalHistory->ice >= 0.5 && $clinicalHistory->ice <= 0.54) {
-                $result = 'Moderado';
+                $interpretation = 'Moderado';
+                $level = 2;
             }
             if ($clinicalHistory->ice >= 0.55) {
-                $result = 'Alto';
+                $interpretation = 'Alto';
+                $level = 4;
             }
+            $data = array(
+                'level' => $level,
+                'interpretation' => $interpretation);
+            $result = json_decode(json_encode($data));
         }
         return $result;
     }
@@ -463,24 +472,34 @@ class PatientController extends Controller
     private function calculateNeckCircumferenceScore($user, $clinicalHistory)
     {
         $result = 'Falta Información';
-        if (isset($user->sex, $clinicalHistory->neck_circumference)) {
-            if ($user->sex->code === 'MALE') {
+        $interpretation = '';
+        $level = null;
+        if (isset($user->gender, $clinicalHistory->neck_circumference)) {
+            if ($user->gender->code === 'MALE') {
                 if ($clinicalHistory->neck_circumference < 35) {
                     $result = 'Moderado';
+                    $level = 2;
                 }
                 if ($clinicalHistory->neck_circumference >= 35) {
                     $result = 'Severo RCV';
+                    $level = 4;
                 }
             }
 
-            if ($user->sex->code === 'FEMALE') {
+            if ($user->gender->code === 'FEMALE') {
                 if ($clinicalHistory->neck_circumference < 32) {
                     $result = 'Moderado';
+                    $level = 2;
                 }
                 if ($clinicalHistory->neck_circumference >= 32) {
                     $result = 'Severo RCV';
+                    $level = 4;
                 }
             }
+            $data = array(
+                'level' => $level,
+                'interpretation' => $interpretation);
+            $result = json_decode(json_encode($data));
         }
         return $result;
     }
