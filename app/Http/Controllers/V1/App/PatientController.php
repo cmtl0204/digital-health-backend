@@ -278,7 +278,9 @@ class PatientController extends Controller
 
     private function calculatePercentageBodyFat($user, $clinicalHistory)
     {
-        $result = 'Falta Información';
+        $data = array(
+            'level' => 0,
+            'interpretation' => 'Falta Información');
 
         if (isset($clinicalHistory->percentage_body_fat, $user->gender)) {
             $referenceValue = ReferenceValue::where('code', 'PBF')
@@ -288,17 +290,18 @@ class PatientController extends Controller
                 ->where('value_min', '<=', $clinicalHistory->percentage_body_fat)
                 ->where('value_max', '>=', $clinicalHistory->percentage_body_fat)
                 ->first();
-            if ($referenceValue)
-                $result = $referenceValue;
-            else
-                $result = 'Fuera del Rango';
+            $data = array(
+                'level' => $referenceValue->level,
+                'interpretation' => $referenceValue->interpretation);
         }
-        return $result;
+        return json_decode(json_encode($data));
     }
 
     private function calculatePercentageBodyWater($user, $clinicalHistory)
     {
-        $result = 'Falta Información';
+        $data = array(
+            'level' => 0,
+            'interpretation' => 'Falta Información');
 
         if (isset($clinicalHistory->percentage_body_water, $user->gender)) {
             $referenceValue = ReferenceValue::where('code', 'PBW')
@@ -306,17 +309,18 @@ class PatientController extends Controller
                 ->where('value_min', '<=', $clinicalHistory->percentage_body_water)
                 ->where('value_max', '>=', $clinicalHistory->percentage_body_water)
                 ->first();
-            if ($referenceValue)
-                $result = $referenceValue;
-            else
-                $result = 'Fuera del Rango';
+            $data = array(
+                'level' => $referenceValue->level,
+                'interpretation' => $referenceValue->interpretation);
         }
-        return $result;
+        return json_decode(json_encode($data));
     }
 
     private function calculatePercentageVisceralFat($user, $clinicalHistory)
     {
-        $result = 'Falta Información';
+        $data = array(
+            'level' => 0,
+            'interpretation' => 'Falta Información');
 
         if (isset($clinicalHistory->percentage_visceral_fat, $user->gender)) {
             $referenceValue = ReferenceValue::where('code', 'PVF')
@@ -324,17 +328,18 @@ class PatientController extends Controller
                 ->where('value_min', '<=', $clinicalHistory->percentage_visceral_fat)
                 ->where('value_max', '>=', $clinicalHistory->percentage_visceral_fat)
                 ->first();
-            if ($referenceValue)
-                $result = $referenceValue;
-            else
-                $result = 'Fuera del Rango';
+            $data = array(
+                'level' => $referenceValue->level,
+                'interpretation' => $referenceValue->interpretation);
         }
-        return $result;
+        return json_decode(json_encode($data));
     }
 
     private function calculateMuscleMass($user, $clinicalHistory)
     {
-        $result = 'Falta Información';
+        $data = array(
+            'level' => 0,
+            'interpretation' => 'Falta Información');
 
         if (isset($clinicalHistory->muscle_mass, $user->gender)) {
             $referenceValue = ReferenceValue::where('code', 'MM')
@@ -344,17 +349,18 @@ class PatientController extends Controller
                 ->where('value_min', '<=', $clinicalHistory->muscle_mass)
                 ->where('value_max', '>=', $clinicalHistory->muscle_mass)
                 ->first();
-            if ($referenceValue)
-                $result = $referenceValue;
-            else
-                $result = 'Fuera del Rango';
+            $data = array(
+                'level' => $referenceValue->level,
+                'interpretation' => $referenceValue->interpretation);
         }
-        return $result;
+        return json_decode(json_encode($data));
     }
 
     private function calculateBoneMass($user, $clinicalHistory)
     {
-        $result = 'Falta Información';
+        $data = array(
+            'level' => 0,
+            'interpretation' => 'Falta Información');
 
         if (isset($clinicalHistory->bone_mass, $user->gender)) {
             $referenceValue = ReferenceValue::where('code', 'BM')
@@ -364,17 +370,18 @@ class PatientController extends Controller
                 ->where('value_min', '<=', $clinicalHistory->bone_mass)
                 ->where('value_max', '>=', $clinicalHistory->bone_mass)
                 ->first();
-            if ($referenceValue)
-                $result = $referenceValue;
-            else
-                $result = 'Fuera del Rango';
+            $data = array(
+                'level' => $referenceValue->level,
+                'interpretation' => $referenceValue->interpretation);
         }
-        return $result;
+        return json_decode(json_encode($data));
     }
 
     private function calculateFraminghamTable($user, $clinicalHistory)
     {
-        $result = 'Falta Información';
+        $data = array(
+            'level' => 0,
+            'interpretation' => 'Falta Información');
         $totalScore = 0;
         if (isset($user->age,
             $user->gender,
@@ -427,8 +434,11 @@ class PatientController extends Controller
                 ->where('value_min', '<=', $totalScore)
                 ->where('value_max', '>=', $totalScore)
                 ->first();
+            $data = array(
+                'level' => 2,
+                'interpretation' => 'Sin Riesgo');
 
-            return isset($risk) ? $risk : 'Sin Riesgo';
+            return $risk ?? $data;
             return array(
                 'scoreAge' => $scoreAge,
                 'scoreTotalCholesterol' => $scoreTotalCholesterol,
@@ -441,12 +451,14 @@ class PatientController extends Controller
             );
         }
 
-        return $result;
+        return json_decode(json_encode($data));
     }
 
     private function calculateIceScore($clinicalHistory)
     {
-        $result = 'Falta Información';
+        $data = array(
+            'level' => 0,
+            'interpretation' => 'Falta Información');
         $interpretation = '';
         $level = null;
         if (isset($clinicalHistory->ice)) {
@@ -465,43 +477,45 @@ class PatientController extends Controller
             $data = array(
                 'level' => $level,
                 'interpretation' => $interpretation);
-            $result = json_decode(json_encode($data));
         }
-        return $result;
+        return json_decode(json_encode($data));
     }
 
     private function calculateNeckCircumferenceScore($user, $clinicalHistory)
     {
-        $result = 'Falta Información';
+        $data = array(
+            'level' => 0,
+            'interpretation' => 'Falta Información');
+
         $interpretation = '';
         $level = null;
+
         if (isset($user->gender, $clinicalHistory->neck_circumference)) {
             if ($user->gender->code === 'MALE') {
                 if ($clinicalHistory->neck_circumference < 35) {
-                    $result = 'Moderado';
+                    $interpretation = 'Moderado';
                     $level = 2;
                 }
                 if ($clinicalHistory->neck_circumference >= 35) {
-                    $result = 'Severo RCV';
+                    $interpretation = 'Severo RCV';
                     $level = 4;
                 }
             }
 
             if ($user->gender->code === 'FEMALE') {
                 if ($clinicalHistory->neck_circumference < 32) {
-                    $result = 'Moderado';
+                    $interpretation = 'Moderado';
                     $level = 2;
                 }
                 if ($clinicalHistory->neck_circumference >= 32) {
-                    $result = 'Severo RCV';
+                    $interpretation = 'Severo RCV';
                     $level = 4;
                 }
             }
             $data = array(
                 'level' => $level,
                 'interpretation' => $interpretation);
-            $result = json_decode(json_encode($data));
         }
-        return $result;
+        return json_decode(json_encode($data));
     }
 }
