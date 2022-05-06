@@ -22,7 +22,7 @@ class ClinicalHistory extends Model implements Auditable
         'weight',
     ];
 
-    protected $appends = ['imc', 'ice'];
+    protected $appends = ['imc', 'ice','blood_pressure'];
 
     // Relationsships
     public function patient()
@@ -62,6 +62,14 @@ class ClinicalHistory extends Model implements Auditable
         if ($this->attributes['height']) {
             return $this->attributes['waist_circumference'] / ($this->attributes['height'] * 100);
         }
+        return null;
+    }
+
+    public function getBloodPressureAttribute()
+    {
+//        if ($this->attributes['diastolic'] && $this->attributes['systolic']) {
+//            return `$this->attributes['systolic']/$this->attributes['diastolic']`;
+//        }
         return null;
     }
 }

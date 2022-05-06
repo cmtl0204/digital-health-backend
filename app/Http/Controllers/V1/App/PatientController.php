@@ -4,14 +4,15 @@ namespace App\Http\Controllers\V1\App;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\App\Catalogues\IndexCatalogueRequest;
+use App\Http\Requests\V1\App\ClinicalHistories\StoreClinicalHistoryRequest;
+use App\Http\Requests\V1\App\ClinicalHistories\UpdateClinicalHistoryRequest;
 use App\Http\Requests\V1\App\Patients\RegisterPatientUserRequest;
 use App\Http\Requests\V1\App\Patients\UpdatePatientUserRequest;
-use App\Http\Resources\V1\App\ClinicalHistories\ClinicalHistoryCollection;
 use App\Http\Resources\V1\App\ClinicalHistories\ClinicalHistoryResource;
 use App\Http\Resources\V1\App\Patients\PatientResource;
 use App\Http\Resources\V1\App\Patients\ProfileResource;
+use App\Http\Resources\V1\App\UserPatients\UserPatientCollection;
 use App\Http\Resources\V1\App\UserPatients\UserPatientResource;
-use App\Http\Resources\V1\Core\Users\UserResource;
 use App\Models\App\ClinicalHistory;
 use App\Models\App\FraminghamTable;
 use App\Models\App\Patient;
@@ -197,13 +198,14 @@ class PatientController extends Controller
             ->response()->setStatusCode(200);
     }
 
-    public function storeClinicalHistory(Request $request, Patient $patient)
+    public function storeClinicalHistory(StoreClinicalHistoryRequest $request, Patient $patient)
     {
         $clinicalHistory = new ClinicalHistory();
         $clinicalHistory->patient()->associate($patient);
         $clinicalHistory->basal_metabolic_rate = $request->input('basalMetabolicRate');
-        $clinicalHistory->blood_pressure = $request->input('bloodPressure');
+        $clinicalHistory->bone_mass = $request->input('boneMass');
         $clinicalHistory->breathing_frequency = $request->input('breathingFrequency');
+        $clinicalHistory->diastolic = $request->input('diastolic');
         $clinicalHistory->glucose = $request->input('glucose');
         $clinicalHistory->hdl_cholesterol = $request->input('hdlCholesterol');
         $clinicalHistory->heart_rate = $request->input('heartRate');
@@ -216,9 +218,8 @@ class PatientController extends Controller
         $clinicalHistory->percentage_body_fat = $request->input('percentageBodyFat');
         $clinicalHistory->muscle_mass = $request->input('muscleMass');
         $clinicalHistory->percentage_body_water = $request->input('percentageBodyWater');
-        $clinicalHistory->bone_mass = $request->input('boneMass');
         $clinicalHistory->percentage_visceral_fat = $request->input('percentageVisceralFat');
-//        $clinicalHistory->registered_at = $request->input('registeredAt');
+        $clinicalHistory->systolic = $request->input('systolic');
         $clinicalHistory->registered_at = now();
         $clinicalHistory->total_cholesterol = $request->input('totalCholesterol');
         $clinicalHistory->waist_circumference = $request->input('waistCircumference');
@@ -236,7 +237,7 @@ class PatientController extends Controller
             ->response()->setStatusCode(201);
     }
 
-    public function updateClinicalHistory(Request $request, Patient $patient, ClinicalHistory $clinicalHistory)
+    public function updateClinicalHistory(UpdateClinicalHistoryRequest $request, Patient $patient, ClinicalHistory $clinicalHistory)
     {
         $patient->save();
         $clinicalHistory->patient()->associate($patient);

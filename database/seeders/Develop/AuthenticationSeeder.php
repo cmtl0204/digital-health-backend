@@ -110,7 +110,7 @@ class AuthenticationSeeder extends Seeder
                 'gender_id' => $genders[rand(0, $sexes->count() - 1)]
             ],
             [
-                'username' => '1234567893',
+                'username' => 'paciente@gmail.com',
                 'sex_id' => $sexes[rand(0, $sexes->count() - 1)],
                 'gender_id' => $genders[rand(0, $sexes->count() - 1)]
             ]

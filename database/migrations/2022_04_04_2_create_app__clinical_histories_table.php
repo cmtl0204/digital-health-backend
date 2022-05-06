@@ -20,10 +20,6 @@ class CreateAppClinicalHistoriesTable extends Migration
                 ->nullable()
                 ->comment('En kilo calorias');
 
-            $table->double('blood_pressure')
-                ->nullable()
-                ->comment('En mg');
-
             $table->double('breathing_frequency')
                 ->nullable()
                 ->comment('En latidos/minutos');
@@ -32,6 +28,9 @@ class CreateAppClinicalHistoriesTable extends Migration
                 ->nullable()
                 ->comment('En porcentaje, Ej. 50');
 
+            $table->double('diastolic')
+                ->nullable()
+                ->comment('En mmHg');
 
             $table->double('glucose')
                 ->nullable()
@@ -88,6 +87,10 @@ class CreateAppClinicalHistoriesTable extends Migration
             $table->date('registered_at')
                 ->nullable()
                 ->comment('Fecha de registro');
+
+            $table->double('systolic')
+                ->nullable()
+                ->comment('En mmHg');
 
             $table->double('total_cholesterol')
                 ->nullable()

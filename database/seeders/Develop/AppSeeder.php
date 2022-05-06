@@ -55,31 +55,28 @@ class AppSeeder extends Seeder
     private function createClinicalHistories()
     {
         $patient = Patient::find(1);
-        $clinicalHistory = new ClinicalHistory();
-        $clinicalHistory->patient()->associate($patient);
-        $clinicalHistory->basal_metabolic_rate = 1000;
-        $clinicalHistory->blood_pressure = 120;
-        $clinicalHistory->breathing_frequency = 200;
-        $clinicalHistory->glucose = 50;
-        $clinicalHistory->hdl_cholesterol = 45;
-        $clinicalHistory->heart_rate = 150;
-        $clinicalHistory->height = 1.65;
-        $clinicalHistory->is_smoke = false;
-        $clinicalHistory->is_diabetes = true;
-        $clinicalHistory->ldl_cholesterol = 45;
-        $clinicalHistory->metabolic_age = 24;
-        $clinicalHistory->neck_circumference = 20;
-        $clinicalHistory->percentage_body_fat = 22;
-        $clinicalHistory->muscle_mass = 37;
-        $clinicalHistory->percentage_body_water = 50;
-        $clinicalHistory->bone_mass = 2.4;
-        $clinicalHistory->percentage_visceral_fat = 6;
-//        $clinicalHistory->registered_at = $request->input('registeredAt');
-        $clinicalHistory->registered_at = now();
-        $clinicalHistory->total_cholesterol = 200;
-        $clinicalHistory->waist_circumference = 35;
-        $clinicalHistory->weight = 60;
-        $clinicalHistory->save();
+        ClinicalHistory::factory(5)->sequence(
+            [
+                'patient_id' => 1,
+                'registered_at' => '2022-01-01'
+            ],
+            [
+                'patient_id' => 1,
+                'registered_at' => '2022-02-01'
+            ],
+            [
+                'patient_id' => 1,
+                'registered_at' => '2022-03-01'
+            ],
+            [
+                'patient_id' => 1,
+                'registered_at' => '2022-04-01'
+            ],
+            [
+                'patient_id' => 1,
+                'registered_at' => '2022-05-01'
+            ],
+        )->create();
     }
 
     private function createReferenceValues()
