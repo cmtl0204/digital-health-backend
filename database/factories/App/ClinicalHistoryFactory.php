@@ -28,7 +28,7 @@ class ClinicalHistoryFactory extends Factory
             'hdl_cholesterol' => $this->faker->numberBetween(40, 60),
             'ldl_cholesterol' => $this->faker->numberBetween(40, 60),
             'glucose' => $this->faker->numberBetween(70, 200),
-            'blood_pressure' => $this->faker->numberBetween(100, 200),
+            /* 'blood_pressure' => $this->faker->numberBetween(100, 200), */
             'heart_rate' => $this->faker->numberBetween(40, 60),
             'breathing_frequency' => $this->faker->numberBetween(40, 60),
             'is_smoke' => $this->faker->randomElement([true, false]),
