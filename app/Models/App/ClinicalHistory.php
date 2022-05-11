@@ -18,11 +18,62 @@ class ClinicalHistory extends Model implements Auditable
     protected $table = 'app.clinical_histories';
 
     protected $fillable = [
+        'basalMetabolicRate',
+        'bloodPressure',
+        'boneMass',
+        'breathingFrequency',
+        'diastolic',
+        'glucose',
+        'hdlCholesterol',
+        'heartRate',
         'height',
+        'ice',
+        'imc',
+        'isDiabetes',
+        'isSmoke',
+        'ldlCholesterol',
+        'metabolicAge',
+        'neckCircumference',
+        'percentageBodyFat',
+        'muscleMass',
+        'percentageBodyWater',
+        'percentageVisceralFat',
+        'registeredAt',
+        'systolic',
+        'totalCholesterol',
+        'waistCircumference',
         'weight',
     ];
 
-    protected $appends = ['imc', 'ice','blood_pressure'];
+    protected $casts = [
+        'basal_metabolic_rate' => 'double',
+        'blood_pressure' => 'double',
+        'breathing_frequency' => 'double',
+        'diastolic' => 'double',
+        'glucose' => 'double',
+        'hdl_cholesterol' => 'double',
+        'heart_rate' => 'double',
+        'height' => 'double',
+        'ice' => 'double',
+        'imc' => 'double',
+        'is_diabetes' => 'boolean',
+        'is_smoke' => 'boolean',
+        'ldl_cholesterol' => 'double',
+        'metabolic_age' => 'double',
+        'neck_circumference' => 'double',
+        'percentage_body_fat' => 'double',
+        'muscle_mass' => 'double',
+        'percentage_body_water' => 'double',
+        'bone_mass' => 'double',
+        'percentage_visceral_fat' => 'double',
+//        'registered_at'=>'double',
+        'systolic' => 'double',
+        'total_cholesterol' => 'double',
+        'waist_circumference' => 'double',
+        'weight' => 'double',
+    ];
+
+    protected $appends = ['imc', 'ice', 'blood_pressure'];
 
     // Relationsships
     public function patient()

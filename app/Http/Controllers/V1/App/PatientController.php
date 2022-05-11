@@ -150,25 +150,40 @@ class PatientController extends Controller
             ->orderByDesc('registered_at')
             ->first();
 
+        $boneMass = $this->calculateBoneMass($user, $clinicalHistory);
+        $breathingFrequency = $this->calculateBreathingFrequency($user, $clinicalHistory);
+        $diastolic = $this->calculateDiastolic($user, $clinicalHistory);
+        $glucose = $this->calculateGlucose($clinicalHistory);
+        $hdlCholesterol = $this->calculateHdlCholesterol($clinicalHistory);
+        $heartRate = $this->calculateHeartRate($user, $clinicalHistory);
+        $iceScore = $this->calculateIceScore($clinicalHistory);
+        $ldlCholesterol = $this->calculateLdlCholesterol($clinicalHistory);
+        $muscleMass = $this->calculateMuscleMass($user, $clinicalHistory);
+        $neckCircumference = $this->calculateNeckCircumferenceScore($user, $clinicalHistory);
         $percentageBodyFat = $this->calculatePercentageBodyFat($user, $clinicalHistory);
         $percentageBodyWater = $this->calculatePercentageBodyWater($user, $clinicalHistory);
         $percentageVisceralFat = $this->calculatePercentageVisceralFat($user, $clinicalHistory);
-        $muscleMass = $this->calculateMuscleMass($user, $clinicalHistory);
-        $boneMass = $this->calculateBoneMass($user, $clinicalHistory);
-        $iceScore = $this->calculateIceScore($clinicalHistory);
-        $neckCircumference = $this->calculateNeckCircumferenceScore($user, $clinicalHistory);
-        $scores = $this->calculateFraminghamTable($user, $clinicalHistory);
+        $risk = $this->calculateRisk($user, $clinicalHistory);
+        $systolic = $this->calculateSystolic($user, $clinicalHistory);
+        $totalCholesterol = $this->calculateTotalCholesterol($clinicalHistory);
 
         $data = array(
             'bodyFat' => $percentageBodyFat,
+            'boneMass' => $boneMass,
+            'breathingFrequency' => $breathingFrequency,
+            'diastolic' => $diastolic,
+            'glucose' => $glucose,
+            'hdlCholesterol' => $hdlCholesterol,
+            'heartRate' => $heartRate,
+            'ice' => $iceScore,
+            'ldlCholesterol' => $ldlCholesterol,
+            'muscleMass' => $muscleMass,
+            'neckCircumference' => $neckCircumference,
             'percentageBodyWater' => $percentageBodyWater,
             'percentageVisceralFat' => $percentageVisceralFat,
-            'muscleMass' => $muscleMass,
-            'boneMass' => $boneMass,
-            'ice' => $iceScore,
-            'neckCircumference' => $neckCircumference,
-            'risk' => $scores,
-//            'scores' => $scores,
+            'risk' => $risk,
+            'systolic' => $systolic,
+            'totalCholesterol' => $totalCholesterol,
         );
 
         return response()->json([
@@ -377,17 +392,148 @@ class PatientController extends Controller
         return json_decode(json_encode($data));
     }
 
-    private function calculateFraminghamTable($user, $clinicalHistory)
+    private function calculateTotalCholesterol($clinicalHistory)
     {
         $data = array(
             'level' => 0,
             'interpretation' => 'Falta Información');
-        $totalScore = 0;
+
+        $interpretation = '';
+        $level = null;
+
+        if (isset($clinicalHistory->total_cholesterol)) {
+
+            if ($clinicalHistory->total_cholesterol < 200) {
+                $interpretation = 'Normal';
+                $level = 2;
+            }
+            if ($clinicalHistory->total_cholesterol >= 200) {
+                $interpretation = 'Alto';
+                $level = 4;
+            }
+
+            $data = array(
+                'level' => $level,
+                'interpretation' => $interpretation);
+        }
+        return json_decode(json_encode($data));
+    }
+
+    private function calculateHdlCholesterol($clinicalHistory)
+    {
+        $data = array(
+            'level' => 0,
+            'interpretation' => 'Falta Información');
+
+        $interpretation = '';
+        $level = null;
+
+        if (isset($clinicalHistory->hdl_cholesterol)) {
+
+            if ($clinicalHistory->hdl_cholesterol < 40) {
+                $interpretation = 'Bajo';
+                $level = 1;
+            }
+            if ($clinicalHistory->hdl_cholesterol >= 40) {
+                $interpretation = 'Normal';
+                $level = 2;
+            }
+
+            $data = array(
+                'level' => $level,
+                'interpretation' => $interpretation);
+        }
+        return json_decode(json_encode($data));
+    }
+
+    private function calculateLdlCholesterol($clinicalHistory)
+    {
+        $data = array(
+            'level' => 0,
+            'interpretation' => 'Falta Información');
+
+        $interpretation = '';
+        $level = null;
+
+        if (isset($clinicalHistory->ldl_cholesterol)) {
+            if ($clinicalHistory->ldl_cholesterol < 100) {
+                $interpretation = 'Óptimo';
+                $level = 2;
+            }
+
+            if ($clinicalHistory->ldl_cholesterol >= 100 && $clinicalHistory->ldl_cholesterol <= 129) {
+                $interpretation = 'Arriba del óptimo';
+                $level = 2;
+            }
+
+            if ($clinicalHistory->ldl_cholesterol >= 130 && $clinicalHistory->ldl_cholesterol <= 159) {
+                $interpretation = 'Fronterizo alto';
+                $level = 4;
+            }
+
+            if ($clinicalHistory->ldl_cholesterol >= 160 && $clinicalHistory->ldl_cholesterol <= 189) {
+                $interpretation = 'Alto';
+                $level = 4;
+            }
+
+            if ($clinicalHistory->ldl_cholesterol >= 190) {
+                $interpretation = 'Muy Alto';
+                $level = 4;
+            }
+
+            $data = array(
+                'level' => $level,
+                'interpretation' => $interpretation);
+        }
+        return json_decode(json_encode($data));
+    }
+
+    private function calculateGlucose($clinicalHistory)
+    {
+        $data = array(
+            'level' => 0,
+            'interpretation' => 'Falta Información');
+
+        $interpretation = '';
+        $level = null;
+
+        if (isset($clinicalHistory->glucose)) {
+            if ($clinicalHistory->glucose < 70) {
+                $interpretation = 'Bajo';
+                $level = 1;
+            }
+
+            if ($clinicalHistory->glucose >= 70 && $clinicalHistory->glucose < 100) {
+                $interpretation = 'Normal';
+                $level = 2;
+            }
+            if ($clinicalHistory->glucose >= 101 && $clinicalHistory->glucose < 125) {
+                $interpretation = 'Prediabetes';
+                $level = 3;
+            }
+            if ($clinicalHistory->glucose >= 126) {
+                $interpretation = 'Diabetes';
+                $level = 4;
+            }
+
+            $data = array(
+                'level' => $level,
+                'interpretation' => $interpretation);
+        }
+        return json_decode(json_encode($data));
+    }
+
+    private function calculateRisk($user, $clinicalHistory)
+    {
+        $data = array(
+            'level' => 0,
+            'interpretation' => 'Falta Información');
+
         if (isset($user->age,
             $user->gender,
             $clinicalHistory->total_cholesterol,
             $clinicalHistory->hdl_cholesterol,
-            $clinicalHistory->blood_pressure,
+            $clinicalHistory->systolic,
             $clinicalHistory->is_diabetes,
             $clinicalHistory->is_smoke)) {
             $scoreAge = (FraminghamTable::where('code', 'AGE')
@@ -408,10 +554,10 @@ class PatientController extends Controller
                 ->where('value_max', '>=', $clinicalHistory->hdl_cholesterol)
                 ->first())->score;
 
-            $scoreBloodPressure = (FraminghamTable::where('code', 'BLOOD_PRESSURE')
+            $scoreSystolic = (FraminghamTable::where('code', 'SYSTOLIC')
                 ->where('gender', $user->gender->code)
-                ->where('value_min', '<=', $clinicalHistory->blood_pressure)
-                ->where('value_max', '>=', $clinicalHistory->blood_pressure)
+                ->where('value_min', '<=', $clinicalHistory->systolic)
+                ->where('value_max', '>=', $clinicalHistory->systolic)
                 ->first())->score;
 
             $scoreDiabetes = (FraminghamTable::where('code', 'DIABETES')
@@ -426,7 +572,7 @@ class PatientController extends Controller
                 ->where('value_max', '>=', $clinicalHistory->is_smoke ? 1 : 0)
                 ->first())->score;
 
-            $totalScore = $scoreAge + $scoreTotalCholesterol + $scoreHdlCholesterol + $scoreBloodPressure + $scoreDiabetes + $scoreSmoke;
+            $totalScore = $scoreAge + $scoreTotalCholesterol + $scoreHdlCholesterol + $scoreSystolic + $scoreDiabetes + $scoreSmoke;
 
             $risk = Risk::where('gender', $user->gender->code)
                 ->where('age_min', '<=', $user->age)
@@ -434,21 +580,27 @@ class PatientController extends Controller
                 ->where('value_min', '<=', $totalScore)
                 ->where('value_max', '>=', $totalScore)
                 ->first();
-            $data = array(
-                'level' => 2,
-                'interpretation' => 'Sin Riesgo');
 
-            return $risk ?? $data;
-            return array(
-                'scoreAge' => $scoreAge,
-                'scoreTotalCholesterol' => $scoreTotalCholesterol,
-                'scoreHdlCholesterol' => $scoreHdlCholesterol,
-                'scoreBloodPressure' => $scoreBloodPressure,
-                'scoreDiabetes' => $scoreDiabetes,
-                'scoreSmoke' => $scoreSmoke,
-                'totalScore' => $totalScore,
-                'risk' => $risk
-            );
+            if (isset($risk)) {
+                $data = array(
+                    'level' => $risk->level,
+                    'interpretation' => $risk->interpretation);
+            } else {
+                $data = array(
+                    'level' => 2,
+                    'interpretation' => 'Sin Riesgo');
+            }
+
+//            return array(
+//                'scoreAge' => $scoreAge,
+//                'scoreTotalCholesterol' => $scoreTotalCholesterol,
+//                'scoreHdlCholesterol' => $scoreHdlCholesterol,
+//                'scoreBloodPressure' => $scoreSystolic,
+//                'scoreDiabetes' => $scoreDiabetes,
+//                'scoreSmoke' => $scoreSmoke,
+//                'totalScore' => $totalScore,
+//                'risk' => $risk
+//            );
         }
 
         return json_decode(json_encode($data));
@@ -518,4 +670,129 @@ class PatientController extends Controller
         }
         return json_decode(json_encode($data));
     }
+
+    private function calculateSystolic($user, $clinicalHistory)
+    {
+        $data = array(
+            'level' => 0,
+            'interpretation' => 'Falta Información');
+
+        $interpretation = '';
+        $level = null;
+
+        if (isset($user->age, $clinicalHistory->systolic)) {
+
+            if ($clinicalHistory->systolic < 110) {
+                $interpretation = 'Bajo';
+                $level = 1;
+            }
+            if ($clinicalHistory->systolic >= 110 && $clinicalHistory->systolic <= 140) {
+                $interpretation = 'Normal';
+                $level = 2;
+            }
+            if ($clinicalHistory->systolic > 140) {
+                $interpretation = 'Alto';
+                $level = 4;
+            }
+
+            $data = array(
+                'level' => $level,
+                'interpretation' => $interpretation);
+        }
+        return json_decode(json_encode($data));
+    }
+
+    private function calculateDiastolic($user, $clinicalHistory)
+    {
+        $data = array(
+            'level' => 0,
+            'interpretation' => 'Falta Información');
+
+        $interpretation = '';
+        $level = null;
+
+        if (isset($user->age, $clinicalHistory->diastolic)) {
+
+            if ($clinicalHistory->diastolic < 70) {
+                $interpretation = 'Bajo';
+                $level = 1;
+            }
+            if ($clinicalHistory->diastolic >= 70 && $clinicalHistory->diastolic <= 90) {
+                $interpretation = 'Normal';
+                $level = 2;
+            }
+            if ($clinicalHistory->diastolic > 90) {
+                $interpretation = 'Alto';
+                $level = 4;
+            }
+
+            $data = array(
+                'level' => $level,
+                'interpretation' => $interpretation);
+        }
+        return json_decode(json_encode($data));
+    }
+
+    private function calculateHeartRate($user, $clinicalHistory)
+    {
+        $data = array(
+            'level' => 0,
+            'interpretation' => 'Falta Información');
+
+        $interpretation = '';
+        $level = null;
+
+        if (isset($user->age, $clinicalHistory->heart_rate)) {
+
+            if ($clinicalHistory->heart_rate < 60) {
+                $interpretation = 'Bajo';
+                $level = 1;
+            }
+            if ($clinicalHistory->heart_rate >= 60 && $clinicalHistory->heart_rate <= 80) {
+                $interpretation = 'Normal';
+                $level = 2;
+            }
+            if ($clinicalHistory->heart_rate > 80) {
+                $interpretation = 'Alto';
+                $level = 4;
+            }
+
+            $data = array(
+                'level' => $level,
+                'interpretation' => $interpretation);
+        }
+        return json_decode(json_encode($data));
+    }
+
+    private function calculateBreathingFrequency($user, $clinicalHistory)
+    {
+        $data = array(
+            'level' => 0,
+            'interpretation' => 'Falta Información');
+
+        $interpretation = '';
+        $level = null;
+
+        if (isset($user->age, $clinicalHistory->breathing_frequency)) {
+
+            if ($clinicalHistory->breathingFrequency < 12) {
+                $interpretation = 'Bajo';
+                $level = 1;
+            }
+            if ($clinicalHistory->breathing_frequency >= 12 && $clinicalHistory->breathing_frequency <= 20) {
+                $interpretation = 'Normal';
+                $level = 2;
+            }
+            if ($clinicalHistory->breathing_frequency > 20) {
+                $interpretation = 'Alto';
+                $level = 4;
+            }
+
+            $data = array(
+                'level' => $level,
+                'interpretation' => $interpretation);
+        }
+        return json_decode(json_encode($data));
+    }
 }
+
