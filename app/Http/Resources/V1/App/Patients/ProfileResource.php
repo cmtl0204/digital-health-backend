@@ -20,8 +20,9 @@ class ProfileResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'sector' => CatalogueResource::make($this->sector) ,
-            'gender' => CatalogueResource::make($this->user->gender) ,
+            'age' => $this->user->age,
+            'sector' => CatalogueResource::make($this->sector),
+            'gender' => CatalogueResource::make($this->user->gender),
             'name' => $this->user->name,
             'lastname' => $this->user->lastname,
             'email' => $this->user->email,

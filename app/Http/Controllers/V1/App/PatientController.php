@@ -257,8 +257,8 @@ class PatientController extends Controller
         $patient->save();
         $clinicalHistory->patient()->associate($patient);
         $clinicalHistory->basal_metabolic_rate = $request->input('basalMetabolicRate');
-        $clinicalHistory->blood_pressure = $request->input('bloodPressure');
         $clinicalHistory->breathing_frequency = $request->input('breathingFrequency');
+        $clinicalHistory->diastolic = $request->input('diastolic');
         $clinicalHistory->glucose = $request->input('glucose');
         $clinicalHistory->hdl_cholesterol = $request->input('hdlCholesterol');
         $clinicalHistory->heart_rate = $request->input('heartRate');
@@ -273,8 +273,8 @@ class PatientController extends Controller
         $clinicalHistory->percentage_body_water = $request->input('percentageBodyWater');
         $clinicalHistory->bone_mass = $request->input('boneMass');
         $clinicalHistory->percentage_visceral_fat = $request->input('percentageVisceralFat');
-//        $clinicalHistory->registered_at = $request->input('registeredAt');
         $clinicalHistory->registered_at = now();
+        $clinicalHistory->systolic = $request->input('systolic');
         $clinicalHistory->total_cholesterol = $request->input('totalCholesterol');
         $clinicalHistory->waist_circumference = $request->input('waistCircumference');
         $clinicalHistory->weight = $request->input('weight');
