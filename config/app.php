@@ -179,7 +179,7 @@ return [
         Intervention\Image\ImageServiceProvider::class,
         Laraveles\Spanish\SpanishServiceProvider::class,
         OwenIt\Auditing\AuditingServiceProvider::class,
-        SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
+//        SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
 
     ],
@@ -239,7 +239,7 @@ return [
 
         'Image' => Intervention\Image\Facades\Image::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
-        'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
+//        'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
     ],
 
 ];
