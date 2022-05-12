@@ -24,6 +24,9 @@ class CreateAppTreatmentsTable extends Migration
 
             $table->date('started_at')
                 ->comment('Fecha de inicio del tratamiento');
+
+            $table->time('time_started_at')
+                ->comment('Hora de inicio del tratamiento');
         });
     }
 
