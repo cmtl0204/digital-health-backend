@@ -181,6 +181,8 @@ class PatientController extends Controller
             'neckCircumference' => $neckCircumference,
             'percentageBodyWater' => $percentageBodyWater,
             'percentageVisceralFat' => $percentageVisceralFat,
+            'registeredAt' => $clinicalHistory ? $clinicalHistory->registered_at : date('Y-m-d'),
+            'isNew' => $clinicalHistory ? false : true,
             'risk' => $risk,
             'systolic' => $systolic,
             'totalCholesterol' => $totalCholesterol,
@@ -202,6 +204,16 @@ class PatientController extends Controller
             ->orderByDesc('registered_at')
             ->first();
 
+        if (!isset($clinicalHistory)) {
+            return response()->json([
+                'data' => null,
+                'msg' => [
+                    'summary' => 'No existe Historia Clínica',
+                    'detail' => '',
+                    'code' => '404'
+                ]
+            ], 404);
+        }
         return (new ClinicalHistoryResource($clinicalHistory))
             ->additional([
                 'msg' => [
@@ -244,8 +256,8 @@ class PatientController extends Controller
         return (new ClinicalHistoryResource($clinicalHistory))
             ->additional([
                 'msg' => [
-                    'summary' => 'success',
-                    'detail' => '',
+                    'summary' => 'Datos Creados',
+                    'detail' => 'Los datos se crearon correctamente',
                     'code' => '201'
                 ]
             ])
