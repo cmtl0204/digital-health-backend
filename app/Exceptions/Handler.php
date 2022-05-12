@@ -47,6 +47,15 @@ class Handler extends ExceptionHandler
     {
 //        return parent::render($request, $e);
         if ($e instanceof HttpException) {
+            if ($e->getStatusCode() === 401) {
+                return response()->json([
+                    'data' => $e->getMessage(),
+                    'msg' => [
+                        'summary' => 'Sin login',
+                        'detail' => '',
+                        'code' => '403-email'
+                    ]], 401);
+            }
             if ($e->getStatusCode() === 403) {
                 return response()->json([
                     'data' => $e->getMessage(),
