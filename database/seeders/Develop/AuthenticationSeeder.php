@@ -706,18 +706,18 @@ class AuthenticationSeeder extends Seeder
 
     private function createIdentificationTypeCatalogues()
     {
-        $catalogues = json_decode(file_get_contents(storage_path() . "/catalogues.json"), true);
-        Catalogue::factory(2)->sequence(
-            [
-                'code' => $catalogues['catalogue']['identification_professional_type']['cc'],
-                'name' => 'CEDULA',
-                'type' => $catalogues['catalogue']['identification_professional_type']['type'],
-            ],
-            [
-                'code' => $catalogues['catalogue']['identification_professional_type']['passport'],
-                'name' => 'PASAPORTE', 'type' => $catalogues['catalogue']['identification_professional_type']['type']
-            ],
-        )->create();
+//        $catalogues = json_decode(file_get_contents(storage_path() . "/catalogues.json"), true);
+//        Catalogue::factory(2)->sequence(
+//            [
+//                'code' => $catalogues['catalogue']['identification_professional_type']['cc'],
+//                'name' => 'CEDULA',
+//                'type' => $catalogues['catalogue']['identification_professional_type']['type'],
+//            ],
+//            [
+//                'code' => $catalogues['catalogue']['identification_professional_type']['passport'],
+//                'name' => 'PASAPORTE', 'type' => $catalogues['catalogue']['identification_professional_type']['type']
+//            ],
+//        )->create();
     }
 
     private function createSexCatalogues()
