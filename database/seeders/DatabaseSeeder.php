@@ -19,18 +19,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        if (env('APP_ENV') === 'local') {
-            $this->call([
-                AuthenticationSeeder::class,
-                CoreSeeder::class,
-                AppSeeder::class
-            ]);
-        } else {
-            $this->call([
-                AuthenticationSeederProd::class,
-                CoreSeederProd::class,
-                AppSeeder::class
-            ]);
-        }
+        $this->call([
+            AuthenticationSeeder::class,
+            AppSeeder::class
+        ]);
     }
 }
