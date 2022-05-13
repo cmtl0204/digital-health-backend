@@ -138,7 +138,7 @@ class Handler extends ExceptionHandler
         return response()->json([
             'data' => $e->getMessage(),
             'msg' => [
-                'summary' => $e->getMessage(),
+                'summary' => $e->getCode(),
                 'detail' => 'Comnicate con el administrador',
                 'code' => $e->getCode()
             ]], 500);

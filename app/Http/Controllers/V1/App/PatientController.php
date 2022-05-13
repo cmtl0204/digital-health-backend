@@ -181,7 +181,7 @@ class PatientController extends Controller
             'neckCircumference' => $neckCircumference,
             'percentageBodyWater' => $percentageBodyWater,
             'percentageVisceralFat' => $percentageVisceralFat,
-            'registeredAt' => $clinicalHistory ? $clinicalHistory->registered_at : date('Y-m-d'),
+            'registeredAt' => $clinicalHistory ? $clinicalHistory->registered_at : null,
             'isNew' => $clinicalHistory ? false : true,
             'risk' => $risk,
             'systolic' => $systolic,
@@ -285,7 +285,7 @@ class PatientController extends Controller
         $clinicalHistory->percentage_body_water = $request->input('percentageBodyWater');
         $clinicalHistory->bone_mass = $request->input('boneMass');
         $clinicalHistory->percentage_visceral_fat = $request->input('percentageVisceralFat');
-        $clinicalHistory->registered_at = now();
+//        $clinicalHistory->registered_at = now();
         $clinicalHistory->systolic = $request->input('systolic');
         $clinicalHistory->total_cholesterol = $request->input('totalCholesterol');
         $clinicalHistory->waist_circumference = $request->input('waistCircumference');
@@ -514,12 +514,11 @@ class PatientController extends Controller
                 $interpretation = 'Bajo';
                 $level = 1;
             }
-
             if ($clinicalHistory->glucose >= 70 && $clinicalHistory->glucose < 100) {
                 $interpretation = 'Normal';
                 $level = 2;
             }
-            if ($clinicalHistory->glucose >= 101 && $clinicalHistory->glucose < 125) {
+            if ($clinicalHistory->glucose >= 100 && $clinicalHistory->glucose < 125) {
                 $interpretation = 'Prediabetes';
                 $level = 3;
             }
@@ -599,7 +598,7 @@ class PatientController extends Controller
                     'interpretation' => $risk->interpretation);
             } else {
                 $data = array(
-                    'level' => 2,
+                    'level' => 0,
                     'interpretation' => 'Sin Riesgo');
             }
 

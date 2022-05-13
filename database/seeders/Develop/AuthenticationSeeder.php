@@ -740,7 +740,7 @@ class AuthenticationSeeder extends Seeder
     private function createGenderCatalogues()
     {
         $catalogues = json_decode(file_get_contents(storage_path() . "/catalogues.json"), true);
-        Catalogue::factory(4)->sequence(
+        Catalogue::factory(2)->sequence(
             [
                 'code' => $catalogues['catalogue']['gender']['male'],
                 'name' => 'MASCULINO',
@@ -751,16 +751,16 @@ class AuthenticationSeeder extends Seeder
                 'name' => 'FEMENINO',
                 'type' => $catalogues['catalogue']['gender']['type'],
             ],
-            [
-                'code' => $catalogues['catalogue']['gender']['other'],
-                'name' => 'OTRO',
-                'type' => $catalogues['catalogue']['gender']['type'],
-            ],
-            [
-                'code' => $catalogues['catalogue']['gender']['not_say'],
-                'name' => 'PREFIERO NO DECIRLO',
-                'type' => $catalogues['catalogue']['gender']['type'],
-            ],
+//            [
+//                'code' => $catalogues['catalogue']['gender']['other'],
+//                'name' => 'OTRO',
+//                'type' => $catalogues['catalogue']['gender']['type'],
+//            ],
+//            [
+//                'code' => $catalogues['catalogue']['gender']['not_say'],
+//                'name' => 'PREFIERO NO DECIRLO',
+//                'type' => $catalogues['catalogue']['gender']['type'],
+//            ],
         )->create();
     }
 
