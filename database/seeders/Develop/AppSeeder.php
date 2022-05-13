@@ -142,18 +142,18 @@ values
 ('BM','MALE',null,null,65,95,0,3.28,'Bajo',1),
 ('BM','MALE',null,null,65,95,3.29,3.29,'Normal',2),
 ('BM','MALE',null,null,65,95,3.3,10000000,'Alto',4),
-('BM','MALE',null,null,96,100,0,3.68,'Bajo',1),
-('BM','MALE',null,null,96,100,3.69,3.69,'Normal',2),
-('BM','MALE',null,null,96,100,3.7,10000000,'Alto',4),
+('BM','MALE',null,null,96,500,0,3.68,'Bajo',1),
+('BM','MALE',null,null,96,500,3.69,3.69,'Normal',2),
+('BM','MALE',null,null,96,500,3.7,10000000,'Alto',4),
 ('BM','FEMALE',null,null,0,49,0,1.94,'Bajo',1),
 ('BM','FEMALE',null,null,0,49,1.95,1.95,'Normal',2),
 ('BM','FEMALE',null,null,0,49,1.96,10000000,'Alto',4),
 ('BM','FEMALE',null,null,50,75,0,2.39,'Bajo',1),
 ('BM','FEMALE',null,null,50,75,2.4,2.4,'Normal',2),
 ('BM','FEMALE',null,null,50,75,2.41,10000000,'Alto',4),
-('BM','FEMALE',null,null,76,100,0,2.94,'Bajo',1),
-('BM','FEMALE',null,null,76,100,2.95,2.95,'Normal',2),
-('BM','FEMALE',null,null,76,100,2.96,10000000,'Alto',4)");
+('BM','FEMALE',null,null,76,500,0,2.94,'Bajo',1),
+('BM','FEMALE',null,null,76,500,2.95,2.95,'Normal',2),
+('BM','FEMALE',null,null,76,500,2.96,10000000,'Alto',4)");
     }
 
     private function createFraminghamTable()
