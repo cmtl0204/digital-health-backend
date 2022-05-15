@@ -27,6 +27,8 @@ class RegisterPatientUserRequest extends FormRequest
         return [
             'username' => "unique:App\Models\Authentication\User,username",
             'email' => "unique:App\Models\Authentication\User,email",
+            'password' => ['required'],
+            'passwordConfirmation' => ['required', 'same:password'],
         ];
     }
 
@@ -35,6 +37,8 @@ class RegisterPatientUserRequest extends FormRequest
         return [
             'username' => 'nombre de usuario',
             'email' => 'correo electrónico',
+            'password' => 'contraseña',
+            'passwordConfirmation' => 'confirmación de contraseña',
         ];
     }
 }
