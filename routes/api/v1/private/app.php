@@ -39,7 +39,7 @@ Route::controller(PatientController::class)->group(function () {
     });
 });
 
-Route::apiResource('patients', PatientController::class);
+//Route::apiResource('patients', PatientController::class);
 
 Route::controller(ClinicalHistoryController::class)->group(function () {
     Route::prefix('clinical-histories/{clinical_history}')->group(function () {

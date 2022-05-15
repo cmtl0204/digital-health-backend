@@ -79,8 +79,8 @@ class PatientController extends Controller
         return (new UserPatientResource($user))
             ->additional([
                 'msg' => [
-                    'summary' => 'Usuario creado',
-                    'detail' => 'Se creó correctamente',
+                    'summary' => 'Cuenta Creada',
+                    'detail' => 'La cuenta se creó correctamente',
                     'code' => '201'
                 ]
             ])
