@@ -55,6 +55,17 @@ class PatientController extends Controller
 
     public function registerPatientUser(RegisterPatientUserRequest $request)
     {
+        $user = User::whereEmail($request->input('email'))->first();
+        if (isset($user)) {
+            return response()->json([
+                'data' => null,
+                'msg' => [
+                    'summary' => 'El correo electrónico ya se encuentra registrado',
+                    'detail' => 'Intenta iniciar sesión',
+                    'code' => '201'
+                ]
+            ], 400);
+        }
         $user = new User();
         $user->gender()->associate(Catalogue::find($request->input('gender.id')));
         $user->username = $request->input('username');
@@ -64,7 +75,6 @@ class PatientController extends Controller
         $user->birthdate = $request->input('birthdate');
         $user->email = $request->input('email');
         $user->phone = $request->input('phone');
-
 
         $patient = new Patient();
         $patient->sector()->associate(Catalogue::find($request->input('sector.id')));
