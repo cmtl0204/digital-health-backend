@@ -3,15 +3,15 @@
 namespace App\Http\Controllers\V1\App;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\V1\App\Catalogues\IndexCatalogueRequest;
 use App\Http\Requests\V1\App\ClinicalHistories\StoreClinicalHistoryRequest;
 use App\Http\Requests\V1\App\ClinicalHistories\UpdateClinicalHistoryRequest;
+use App\Http\Requests\V1\App\Patients\IndexPatientRequest;
 use App\Http\Requests\V1\App\Patients\RegisterPatientUserRequest;
 use App\Http\Requests\V1\App\Patients\UpdatePatientUserRequest;
 use App\Http\Resources\V1\App\ClinicalHistories\ClinicalHistoryResource;
+use App\Http\Resources\V1\App\Patients\PatientCollection;
 use App\Http\Resources\V1\App\Patients\PatientResource;
 use App\Http\Resources\V1\App\Patients\ProfileResource;
-use App\Http\Resources\V1\App\UserPatients\UserPatientCollection;
 use App\Http\Resources\V1\App\UserPatients\UserPatientResource;
 use App\Models\App\ClinicalHistory;
 use App\Models\App\FraminghamTable;
@@ -20,30 +20,28 @@ use App\Models\App\ReferenceValue;
 use App\Models\App\Risk;
 use App\Models\Authentication\User;
 use App\Models\Core\Catalogue;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class PatientController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:update-patients')->only(['updatePatientUser']);
-        $this->middleware('permission:view-patients')->only(['index']);
-        $this->middleware('permission:delete-patients')->only(['destroy']);
+//        $this->middleware('permission:update-patients')->only(['updatePatientUser']);
+//        $this->middleware('permission:view-patients')->only(['index']);
+//        $this->middleware('permission:delete-patients')->only(['destroy']);
 //        $this->middleware('permission:store-clinicalHistories')->only(['storeClinicalHistory']);
         $this->middleware('permission:update-clinicalHistories')->only(['updateClinicalHistory']);
         $this->middleware('permission:view-clinicalHistories')->only(['getClinicalHistories']);
     }
 
-    public function index(IndexCatalogueRequest $request)
+    public function index(IndexPatientRequest $request)
     {
         $sorts = explode(',', $request->sort);
 
-        $catalogues = Catalogue::customOrderBy($sorts)
-            ->type($request->input('type'))
+        $patients = Patient::customOrderBy($sorts)
             ->paginate($request->input('perPage'));
 
-        return (new UserPatientCollection($catalogues))
+        return (new PatientCollection($patients))
             ->additional([
                 'msg' => [
                     'summary' => 'success',
@@ -218,11 +216,11 @@ class PatientController extends Controller
             return response()->json([
                 'data' => null,
                 'msg' => [
-                    'summary' => 'No existe Historia Clínica',
+                    'summary' => '',
                     'detail' => '',
-                    'code' => '404'
+                    'code' => '200'
                 ]
-            ], 404);
+            ], 200);
         }
         return (new ClinicalHistoryResource($clinicalHistory))
             ->additional([
@@ -239,6 +237,7 @@ class PatientController extends Controller
     {
         $clinicalHistory = new ClinicalHistory();
         $clinicalHistory->patient()->associate($patient);
+        $clinicalHistory->physicalActivity()->associate(Catalogue::find($request->input('physicalActivity.id')));
         $clinicalHistory->basal_metabolic_rate = $request->input('basalMetabolicRate');
         $clinicalHistory->bone_mass = $request->input('boneMass');
         $clinicalHistory->breathing_frequency = $request->input('breathingFrequency');
@@ -278,6 +277,7 @@ class PatientController extends Controller
     {
         $patient->save();
         $clinicalHistory->patient()->associate($patient);
+        $clinicalHistory->physicalActivity()->associate(Catalogue::find($request->input('physicalActivity.id')));
         $clinicalHistory->basal_metabolic_rate = $request->input('basalMetabolicRate');
         $clinicalHistory->breathing_frequency = $request->input('breathingFrequency');
         $clinicalHistory->diastolic = $request->input('diastolic');

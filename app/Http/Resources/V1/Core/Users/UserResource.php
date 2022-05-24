@@ -24,6 +24,7 @@ class UserResource extends JsonResource
             'age' => $this->age,
             'username' => $this->username,
             'name' => $this->name,
+            'gender' => CatalogueResource::make($this->gender),
             'lastname' => $this->lastname,
             'email' => $this->email,
             'phone' => $this->phone,

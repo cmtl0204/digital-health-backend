@@ -14,7 +14,7 @@ class CatalogueFactory extends Factory
     {
         return [
             'code' => $this->faker->ean8(),
-            'name' => $this->faker->sentence(),
+            'name' => $this->faker->word(),
             'type' => $this->faker->word(),
         ];
     }

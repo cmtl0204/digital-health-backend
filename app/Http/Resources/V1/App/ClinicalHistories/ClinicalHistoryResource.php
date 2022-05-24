@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\V1\App\ClinicalHistories;
 
+use App\Http\Resources\V1\App\Catalogues\CatalogueResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ClinicalHistoryResource extends JsonResource
@@ -17,6 +18,7 @@ class ClinicalHistoryResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'physicalActivity' => CatalogueResource::make($this->physicalActivity),
             'basalMetabolicRate' => $this->basal_metabolic_rate,
             'bloodPressure' => $this->blood_pressure,
             'breathingFrequency' => $this->breathing_frequency,

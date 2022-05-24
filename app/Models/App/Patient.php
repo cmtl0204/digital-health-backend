@@ -35,6 +35,11 @@ class Patient extends Model implements Auditable
         return $this->belongsTo(Catalogue::class);
     }
 
+    public function treatments()
+    {
+        return $this->hasMany(Treatment::class);
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

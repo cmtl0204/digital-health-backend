@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 use Illuminate\Database\QueryException;
@@ -45,7 +46,7 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $e)
     {
-//        return parent::render($request, $e);
+        return parent::render($request, $e);
         if ($e instanceof HttpException) {
             if ($e->getStatusCode() === 401) {
                 return response()->json([
@@ -125,9 +126,19 @@ class Handler extends ExceptionHandler
                 ]], 422);
         }
 
+        if ($e instanceof AuthenticationException) {
+            return response()->json([
+                'data' => null,
+                'msg' => [
+                    'summary' => 'Unauthenticated',
+                    'detail' => 'Por favor incie sesión',
+                    'code' => $e->getCode(),
+                ]], 401);
+        }
+
         if ($e instanceof \Error) {
             return response()->json([
-                'data' => $e->getMessage(),
+                'data' => $request,
                 'msg' => [
                     'summary' => 'Oops! Tuvimos un problema con el servidor',
                     'detail' => 'Comnicate con el administrador',
@@ -136,9 +147,9 @@ class Handler extends ExceptionHandler
         }
 
         return response()->json([
-            'data' => $e->getMessage(),
+            'data' => $e->getStatusCode(),
             'msg' => [
-                'summary' => $e->getCode(),
+                'summary' => $e->getStatusCode(),
                 'detail' => 'Comnicate con el administrador',
                 'code' => $e->getCode()
             ]], 500);

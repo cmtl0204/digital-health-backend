@@ -4,7 +4,7 @@ namespace App\Http\Controllers\V1\App;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\App\Catalogues\IndexCatalogueRequest;
-use App\Http\Resources\V1\App\ClinicalHistories\ClinicalHistoryCollection;
+use App\Http\Resources\V1\App\ClinicalHistories\TreatmentCollection;
 use App\Http\Resources\V1\App\ClinicalHistories\ClinicalHistoryResource;
 use App\Http\Resources\V1\App\Patients\PatientResource;
 use App\Http\Resources\V1\App\UserPatients\UserPatientResource;
@@ -34,7 +34,7 @@ class ClinicalHistoryController extends Controller
             ->orderBy('registered_at')
             ->paginate();
 
-        return (new ClinicalHistoryCollection($clinicalHistories))
+        return (new TreatmentCollection($clinicalHistories))
             ->additional([
                 'msg' => [
                     'summary' => 'success',
@@ -81,7 +81,7 @@ class ClinicalHistoryController extends Controller
             ->orderBy('registered_at')
             ->get();
 
-        return (new ClinicalHistoryCollection($clinicalHistories))
+        return (new TreatmentCollection($clinicalHistories))
             ->additional([
                 'msg' => [
                     'summary' => 'success',

@@ -81,6 +81,11 @@ class ClinicalHistory extends Model implements Auditable
         return $this->belongsTo(Patient::class);
     }
 
+    public function physicalActivity()
+    {
+        return $this->belongsTo(Catalogue::class);
+    }
+
     // Mutators
 
     // Scopes

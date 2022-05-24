@@ -68,7 +68,7 @@ class AuthenticationSeeder extends Seeder
 
     private function createMenus()
     {
-        $menus = Menu::factory(2)->sequence(
+        Menu::factory(2)->sequence(
             [
                 'role_id' => 1,
                 'icon' => 'pi pi-users',
@@ -77,20 +77,11 @@ class AuthenticationSeeder extends Seeder
             ],
             [
                 'role_id' => 2,
-                'icon' => 'pi pi-book',
-                'label' => 'Tests',
-                'router_link' => '/test'
-            ],
-            [
-                'role_id' => 3,
-                'icon' => 'pi pi-book',
-                'label' => 'Tests',
-                'router_link' => '/test'
+                'icon' => 'pi pi-users',
+                'label' => 'Pacientes',
+                'router_link' => '/patients'
             ]
         )->create();
-//        foreach ($menus as $menu) {
-//            $menuTests = Menu::factory(5)->create(['parent_id' => $menu->id]);
-//        }
     }
 
     private function createUsers()
@@ -116,6 +107,8 @@ class AuthenticationSeeder extends Seeder
                 'gender_id' => $genders[rand(0, $sexes->count() - 1)]
             ]
         )->create();
+
+        User::factory(25)->create();
     }
 
     private function createRoles()
@@ -166,6 +159,9 @@ class AuthenticationSeeder extends Seeder
         $userAdmin->assignRole('admin');
         $userMedic->assignRole('medic');
         $userPatient->assignRole('patient');
+        foreach (User::where('id', '>', 3)->get() as $user) {
+            $user->assignRole('patient');
+        }
     }
 
     private function createLocationCatalogues()
