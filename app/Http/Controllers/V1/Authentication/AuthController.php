@@ -187,7 +187,7 @@ class AuthController extends Controller
             return $user;
         }
 
-        $token = Str::random(70);
+        $token = Str::random(6);
 
         PasswordReset::create([
             'username' => $user->username,
@@ -204,7 +204,8 @@ class AuthController extends Controller
             'data' => null,
             'msg' => [
                 'summary' => 'Correo enviado',
-                'detail' => $user->hiddenStringEmail($user->email),
+//                'detail' => $user->hiddenStringEmail($user->email),
+                'detail' => 'Revise su correo electrónico',
                 'code' => '201'
             ]], 201);
     }
