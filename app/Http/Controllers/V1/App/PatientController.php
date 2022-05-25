@@ -39,6 +39,7 @@ class PatientController extends Controller
         $sorts = explode(',', $request->sort);
 
         $patients = Patient::customOrderBy($sorts)
+            ->user($request->input('search'))
             ->paginate($request->input('perPage'));
 
         return (new PatientCollection($patients))

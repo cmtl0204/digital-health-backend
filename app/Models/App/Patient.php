@@ -60,4 +60,14 @@ class Patient extends Model implements Auditable
             return $query;
         }
     }
+
+    public function scopeUser($query, $search)
+    {
+        if ($search) {
+            return $query->whereHas('user', function ($user) use ($search) {
+                $user->where('name', 'iLike', "%$search%")
+                    ->orWhere('lastname', 'iLike', "%$search%");
+            });
+        }
+    }
 }
