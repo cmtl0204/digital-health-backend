@@ -4,6 +4,7 @@ namespace App\Http\Controllers\V1\Core;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\Core\Users\CatalogueUserRequest;
+use App\Models\Authentication\Role;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Http\Requests\V1\Core\Files\DestroysFileRequest;
@@ -42,9 +43,9 @@ class UserController extends Controller
             ->name($request->input('search'))
             ->username($request->input('search'))
             ->whereHas('roles', function ($roles) {
-                $roles->where('name', 'admin')->orWhere('name', 'support')->orWhere('name', 'viewer');
+                $roles->where('name', Role::ADMIN)->orWhere('name', Role::MEDIC)->orWhere('name', Role::PATIENT);
             })->orderByDesc('created_at')
-            ->paginate($request->input('per_page'));
+            ->paginate($request->input('perPage'));
 
         return (new UserCollection($users))
             ->additional([

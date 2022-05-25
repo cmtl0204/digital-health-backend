@@ -25,8 +25,10 @@ class RegisterPatientUserRequest extends FormRequest
     public function rules()
     {
         return [
-            'username' => "unique:App\Models\Authentication\User,username",
-            'email' => "unique:App\Models\Authentication\User,email",
+//            'username' => "unique:App\Models\Authentication\User,username",
+//            'email' => "unique:App\Models\Authentication\User,email",
+            'username' => ['required'],
+            'email' => ['required'],
             'password' => ['required'],
             'passwordConfirmation' => ['required', 'same:password'],
         ];

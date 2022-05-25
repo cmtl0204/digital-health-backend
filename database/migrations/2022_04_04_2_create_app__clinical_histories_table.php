@@ -16,6 +16,11 @@ class CreateAppClinicalHistoriesTable extends Migration
             $table->foreignId('patient_id')
                 ->constrained('app.patients');
 
+            $table->foreignId('physical_activity_id')
+                ->nullable()
+                ->comment('')
+                ->constrained('app.catalogues');
+
             $table->double('basal_metabolic_rate')
                 ->nullable()
                 ->comment('En kilo calorias');

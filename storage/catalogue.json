@@ -256,5 +256,20 @@
         "type": "REQUIREMENT_STATE",
         "enabled": "ENABLED",
         "disabled": "DISABLED"
+    },
+    "physical_activity": {
+        "type": "PHYSICAL_ACTIVITY"
+    },
+    "food_type": {
+        "type": "FOOD_TYPE"
+    },
+    "unit_type": {
+        "type": "UNIT_TYPE"
+    },
+    "sector_location": {
+        "type": "SECTOR_LOCATION"
+    },
+    "product_type": {
+        "type": "PRODUCT_TYPE"
     }
 }

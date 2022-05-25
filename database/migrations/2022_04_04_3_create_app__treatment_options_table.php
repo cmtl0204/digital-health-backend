@@ -13,11 +13,17 @@ class CreateAppTreatmentOptionsTable extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreignId('treatment_id')
-                ->constrained('app.treatments');
+            $table->foreignId('treatment_detail_id')
+                ->constrained('app.treatment_details');
 
             $table->foreignId('product_id')
                 ->constrained('app.products');
+
+            $table->string('unit')
+                ->comment('Unidad de medida ejmplo kg, metros, etc');
+
+            $table->string('quantity')
+                ->comment('Cantidad de comida ejemplo 1/2, 1, 300,');
         });
     }
 

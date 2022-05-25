@@ -17,15 +17,20 @@ class CreateAppTreatmentsTable extends Migration
                 ->constrained('app.patients');
 
             $table->json('additional_information')
+                ->nullable()
                 ->comment('Con la estructura {title, description}');
 
             $table->date('ended_at')
                 ->comment('Fecha de fin del tratamiento');
 
+            $table->boolean('published')
+                ->default(false)
+                ->comment('true => publicado, false=> no publicado');
+
             $table->date('started_at')
                 ->comment('Fecha de inicio del tratamiento');
 
-            $table->time('time_started_at')
+            $table->dateTime('time_started_at')
                 ->comment('Hora de inicio del tratamiento');
         });
     }

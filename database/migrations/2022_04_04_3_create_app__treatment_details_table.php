@@ -29,8 +29,8 @@ class CreateAppTreatmentDetailsTable extends Migration
             $table->string('quantity')
                 ->comment('Cantidad de comida ejemplo 1/2, 1, 300,');
 
-
-            $table->time('time_started_at')
+            $table->dateTime('time_started_at')
+                ->nullable()
                 ->comment('Hora del tratamiento');
         });
     }
