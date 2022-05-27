@@ -17,8 +17,8 @@
     <div class="row">
         <div class="col-7 offset-2">
             <img
-                src="{{$message->embed(asset('images/email/bot.png'))}}"
-                width="180px"
+                src="{{$message->embed(asset('images/email/logo.png'))}}"
+                width="120px"
                 height="100px"
                 alt="Imagen PNG alternativa">
         </div>
@@ -32,41 +32,12 @@
             <p class="text-muted">
                 Hola, <b>{{$data->user->name}} {{$data->user->lastname}}</b>
             </p>
-            <p class="text-muted">
-                Gracias por participar | TEMI, te escucha
-            </p>
             <br>
             @yield('content')
             <br>
             <p>
-                Si cuentas con alguna pregunta o duda, por favor comunícate al siguiente correo
-                <b style="color: blue">sgarcia@esquel.org.ec.</b>
+                Saludos cordiales
             </p>
-            <p>
-                Saludos cordiales,
-            </p>
-            <p>
-                Fundación Esquel
-            </p>
-           <div class="row">
-               <div class="col-12">
-                   <img
-                       src="{{$message->embed(asset('images/email/esquel.jpg'))}}"
-                       width="200px"
-                       alt="Imagen PNG ESQUEL">
-                   <img
-                       src="{{$message->embed(asset('images/email/oxigeno.png'))}}"
-                       width="200px"
-                       alt="Imagen PNG OXIGEN">
-                   <img
-                       src="{{$message->embed(asset('images/email/usaid.png'))}}"
-                       width="200px"
-                       alt="Imagen PNG USAID">
-               </div>
-           </div>
-{{--            <h6 class="text-center bg-secondary text-white">&copy; {{(new \Carbon\Carbon($system->date))->format('Y')}}--}}
-{{--                Todos los--}}
-{{--                derechos reservados. {{$system->acronym}} v{{$system->version}}</h6>--}}
         </div>
     </div>
 </div>

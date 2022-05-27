@@ -11,11 +11,8 @@
             <br>
             <p>Código: <b>{{$data->token}}</b>
             </p>
-
             <br>
-            <br>
-            <br>
-            <p>Si no ha solicitado este servicio, repórtelo a su Institución.</p>
+            <p>Si no ha solicitado este servicio, repórtelo al administrador.</p>
         </div>
     </div>
 @endsection
