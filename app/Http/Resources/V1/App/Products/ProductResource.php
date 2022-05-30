@@ -21,11 +21,13 @@ class ProductResource extends JsonResource
             'type' => CatalogueResource::make($this->type),
             'name' => $this->name,
             'energy' => $this->energy,
+            'fiber' => $this->fiber,
             'protein' => $this->protein,
             'lipids' => $this->lipids,
             'carbohydrates' => $this->carbohydrates,
             'quantity' => $this->quantity,
             'unit' => $this->unit,
+            'netWeight' => $this->net_weight,
         ];
     }
 }
