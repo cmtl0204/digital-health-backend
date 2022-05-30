@@ -256,4 +256,28 @@ class TreatmentController extends Controller
                 ]
             ]);
     }
+
+    public function getTreatmentDetailsMobile(Treatment $treatment)
+    {
+        $treatmentDetails = Catalogue::whereHas('treatmentDetails', function ($treatmentDetails) use ($treatment) {
+            $treatmentDetails->where('treatment_id', $treatment->id);
+        })->with(['treatmentDetails' => function ($treatmentDetails) {
+            $treatmentDetails->with('product')
+                ->with(['treatmentOptions' => function ($treatmentOptions) {
+                    $treatmentOptions->with('product');
+                }]);
+        }])
+            ->where('type', 'FOOD_TYPE')
+            ->orderBy('code')
+            ->get();
+
+        return response()->json([
+            'data' => $treatmentDetails,
+            'msg' => [
+                'summary' => 'success',
+                'detail' => '',
+                'code' => '200'
+            ]
+        ]);
+    }
 }

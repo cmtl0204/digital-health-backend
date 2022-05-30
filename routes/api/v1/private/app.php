@@ -68,6 +68,7 @@ Route::controller(TreatmentController::class)->group(function () {
     Route::prefix('treatments/{treatment}')->group(function () {
         Route::post('treatment-details','storeTreatmentDetail');
         Route::get('treatment-details','getTreatmentDetails');
+        Route::get('treatment-details-mobile','getTreatmentDetailsMobile');
     });
 
     Route::prefix('treatments')->group(function () {

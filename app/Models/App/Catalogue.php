@@ -34,6 +34,11 @@ class Catalogue extends Model implements Auditable
         return $this->hasMany(Catalogue::class, 'parent_id', 'core.catalogues');
     }
 
+    public function treatmentDetails()
+    {
+        return $this->hasMany(TreatmentDetail::class,'type_id');
+    }
+
     // Mutators
     public function setCodeAttribute($value)
     {
