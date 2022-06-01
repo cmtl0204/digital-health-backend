@@ -6,6 +6,7 @@ use App\Models\App\Catalogue;
 use App\Models\App\ClinicalHistory;
 use App\Models\App\Patient;
 use App\Models\App\Product;
+use App\Models\App\Tip;
 use App\Models\Authentication\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -15,6 +16,7 @@ class AppSeeder extends Seeder
     public function run()
     {
         $this->createProductTypesCatalogues();
+        $this->createTips();
         $this->createSectorTypeCatalogues();
         $this->createPhysicalActivityCatalogues();
         $this->createTypeFootCatalogues();
@@ -2537,6 +2539,84 @@ values
 (19,	'Vino tinto',	'2',	'copa',	200,	200,	170,	null,	null,	5.2,	null),
 (19,	'Vodka',	'60',	'ml',	60,	60,	139,	null,	null,	0,	null),
 (19,	'Whisky',	'55',	'ml',	55,	55,	138,	null,	null,	0.1,	null)");
+    }
+
+    private function createTips()
+    {
+        Tip::factory(18)->sequence(
+            [
+                'description' => 'Procura que tu consumo de sal sea menor a 1 cucharadita (<5 gramos) por día y elige preparaciones ricas en vegetales y fruta',
+                'source' => 'Guía de Práctica Clinica. Detección Deteccióny Estratificación de factores de riesgo cardiovasc y Estratificación de factores de riesgo cardiovascular.México: Instituto Mexicano del Seguro Social, 2011.'
+            ],
+            [
+                'description' => 'Para disminuir tu consumo de sal, procura usar otras especias para favorecer el sabor de la comida, por ejemplo: pimienta, comino, paprika, hierbas aromáticas.',
+                'source' => 'Guía de Práctica Clinica. Detección Deteccióny Estratificación de factores de riesgo cardiovasc y Estratificación de factores de riesgo cardiovascular.México: Instituto Mexicano del Seguro Social, 2011.'
+            ],
+            [
+                'description' => 'Disminuye tu consumo de alimentos procesados o enlatados por su alto contenido de sodio (sal).',
+                'source' => 'Guía de Práctica Clinica. Detección Deteccióny Estratificación de factores de riesgo cardiovasc y Estratificación de factores de riesgo cardiovascular.México: Instituto Mexicano del Seguro Social, 2011.'
+            ],
+            [
+                'description' => 'Recuerda que el efecto nocivo del tabaquismo tiene una relación directa con el número de cigarrillos fumados al día y con la antigüedad del hábito.',
+                'source' => 'Guía de Práctica Clinica. Detección Deteccióny Estratificación de factores de riesgo cardiovasc y Estratificación de factores de riesgo cardiovascular.México: Instituto Mexicano del Seguro Social, 2011.'
+            ],
+            [
+                'description' => 'Si necesitas ayuda para dejar el hábito de fumar, acude a tu clínica para recibir apoyo de un equipo multidisciplinario.',
+                'source' => 'Guía de Práctica Clinica. Detección Deteccióny Estratificación de factores de riesgo cardiovasc y Estratificación de factores de riesgo cardiovascular.México: Instituto Mexicano del Seguro Social, 2011.'
+            ],
+            [
+                'description' => 'El cigarro/tabaco influye en el sistema de coagulación afectando de manera directa el sistema cardiovascular y aumentando el riesgo de enfermedad coronaria.',
+                'source' => 'Guía de Práctica Clinica. Detección Deteccióny Estratificación de factores de riesgo cardiovasc y Estratificación de factores de riesgo cardiovascular.México: Instituto Mexicano del Seguro Social, 2011.'
+            ],
+            [
+                'description' => 'Haz ejercicio de forma regular, por lo menos 30 minutos al día, al menos 3 días de la semana.',
+                'source' => 'Guía de Práctica Clinica. Detección Deteccióny Estratificación de factores de riesgo cardiovasc y Estratificación de factores de riesgo cardiovascular.México.'
+            ],
+            [
+                'description' => 'Una buena forma de iniciar el hábito de ejercitarte es caminando 30 minutos al día a paso medio.',
+                'source' => 'Guía de Práctica Clinica. Detección Deteccióny Estratificación de factores de riesgo cardiovasc y Estratificación de factores de riesgo cardiovascular.México.'
+            ],
+            [
+                'description' => 'Bailar es una buena forma de mantener tu cuerpo activo.',
+                'source' => 'Guía de Práctica Clinica. Detección Deteccióny Estratificación de factores de riesgo cardiovasc y Estratificación de factores de riesgo cardiovascular.México.'
+            ],
+            [
+                'description' => 'Si acostumbras tomar bebidas alcoholicas, reduce tu ingesta a un máximo de 1.5 oz en hombres y 1 oz en mujeres por día.',
+                'source' => 'Minzer, Simona, Ricardo Arturo Losno, and Rosa Casas. "The effect of alcohol on cardiovascular risk factors: is there new Information?." Nutrients 12.4 (2020): 912.'
+            ],
+            [
+                'description' => 'Consume una dieta variada con mayor contenido de frutas, cereales, legumbres verduras y pescado.',
+                'source' => 'De Backer, Guy, et al. "European guidelines on cardiovascular disease prevention in clinical practice; third joint task force of European and other societies on cardiovascular disease prevention in clinical practice (constituted by representatives of eight societies and by invited experts)." European Journal of Preventive Cardiology 10.4 (2003): S1-S10.'
+            ],
+            [
+                'description' => 'Disminuye tu consumo de grasas saturadas como manteca, mantequilla, margarinas y evita preparaciones como capeados, empanizados, fritos.',
+                'source' => 'De Backer, Guy, et al. "European guidelines on cardiovascular disease prevention in clinical practice; third joint task force of European and other societies on cardiovascular disease prevention in clinical practice (constituted by representatives of eight societies and by invited experts)." European Journal of Preventive Cardiology 10.4 (2003): S1-S10.'
+            ],
+            [
+                'description' => 'Recuerda que la Hipertensión Arterial es una enfermedad muchas veces silenciosa y sin síntomas; sin embargo, padecerla aumenta tu riesgo de sufrir enfermedades cerebro vasculares hasta 2-3 veces más.',
+                'source' => 'Blood Pressure. Lowering treatment Trialist colaboración 2000.'
+            ],
+            [
+                'description' => 'El riesgo de enfermedad y mortalidad cardiovascular es 2 a 8 veces más en personas diabéticas que en quienes no lo son.',
+                'source' => 'Kannel, WILLIAM B., and DANIEL L. McGee. "Diabetes and cardiovascular risk factors: the Framingham study." Circulation 59.1 (1979): 8-13.'
+            ],
+            [
+                'description' => 'El consumo de grasas poliinsaturadas como el Omega 3 provenientes del pescado resulta benéfico para tu salud cardiovascular.',
+                'source' => 'Greenland P, Alpert ACCF/AHA Guideline for Assessment of Cardiovascular Risk in Asymptomatic Adults J. Am. Coll. Cardiol. 2010; 56; e50-e103.'
+            ],
+            [
+                'description' => 'Los beneficios de la suspensión del hábito tabáquico son evidentes desde el inicio. Un año después el riesgo excedente de cardiopatía coronaria es de la mitad de la de un fumador activo, entre 5 y 15 años el riesgo de ECV se reduce al de una persona que nunca ha fumado.',
+                'source' => 'Guía de Práctica Clinica. Detección Deteccióny Estratificación de factores de riesgo cardiovasc y Estratificación de factores de riesgo cardiovascular.México: Instituto Mexicano del Seguro Social, 2011.'
+            ],
+            [
+                'description' => 'La pérdida de tan solo 5-10% de tu peso corporal normaliza o mejora notablemente el control de Hipertensión Arterial, Dislipidemias y Diabetes Mellitus.',
+                'source' => 'Greenland P, Alpert ACCF/AHA Guideline for Assessment of Cardiovascular Risk in Asymptomatic Adults J. Am. Coll. Cardiol. 2010; 56; e50-e103.'
+            ],
+            [
+                'description' => 'La inactividad física incrementa 1.5 veces tu riesgo de enfermedad cardiaca y evento vascular isquémico.',
+                'source' => 'Greenland P, Alpert ACCF/AHA Guideline for Assessment of Cardiovascular Risk in Asymptomatic Adults J. Am. Coll. Cardiol. 2010; 56; e50-e103. '
+            ],
+        )->create();
     }
 
     private function updateProducts()
