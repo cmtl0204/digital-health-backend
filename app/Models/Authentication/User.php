@@ -278,6 +278,7 @@ class User extends Authenticatable implements Auditable, MustVerifyEmail
 
     public function getAgeAttribute()
     {
-        return Carbon::parse($this->attributes['birthdate'] )->age;
+        if (isset($this->attributes['birthdate']))
+            return Carbon::parse($this->attributes['birthdate'])->age;
     }
 }

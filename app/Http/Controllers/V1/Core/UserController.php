@@ -87,32 +87,32 @@ class UserController extends Controller
         }
 
         $user = new User();
-        $user->identificationType()->associate(Catalogue::find($request->input('identificationType.id')));
-        $user->sex()->associate(Catalogue::find($request->input('sex.id')));
-        $user->gender()->associate(Catalogue::find($request->input('gender.id')));
-        $user->bloodType()->associate(Catalogue::find($request->input('bloodType.id')));
-        $user->ethnicOrigin()->associate(Catalogue::find($request->input('ethnicOrigin.id')));
-        $user->civilStatus()->associate(Catalogue::find($request->input('civilStatus.id')));
+//        $user->identificationType()->associate(Catalogue::find($request->input('identificationType.id')));
+//        $user->sex()->associate(Catalogue::find($request->input('sex.id')));
+//        $user->gender()->associate(Catalogue::find($request->input('gender.id')));
+//        $user->bloodType()->associate(Catalogue::find($request->input('bloodType.id')));
+//        $user->ethnicOrigin()->associate(Catalogue::find($request->input('ethnicOrigin.id')));
+//        $user->civilStatus()->associate(Catalogue::find($request->input('civilStatus.id')));
 
         $user->username = $request->input('username');
         $user->password = $request->input('password');
         $user->name = $request->input('name');
         $user->lastname = $request->input('lastname');
-        $user->birthdate = $request->input('birthdate');
+//        $user->birthdate = $request->input('birthdate');
         $user->email = $request->input('email');
 
         DB::transaction(function () use ($request, $user) {
             $user->save();
             $user->assignRole($request->input('role.name'));
-            $user->addPhones($request->input('phones'));
-            $user->addEmails($request->input('emails'));
+//            $user->addPhones($request->input('phones'));
+//            $user->addEmails($request->input('emails'));
         });
 
         return (new UserResource($user))
             ->additional([
                 'msg' => [
-                    'summary' => 'La contraseña es ' . $request->input('password'),
-                    'detail' => 'Usuario Creado',
+                    'summary' => 'Usuario creado',
+                    'detail' => 'El usuario se creó correctamente',
                     'code' => '200'
                 ]
             ])
@@ -135,18 +135,18 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, User $user)
     {
         $patient = $user->patient()->first();
-        $user->sex()->associate(Catalogue::find($request->input('sex.id')));
-        $patient->sector()->associate(Catalogue::find($request->input('sector.id')));
+//        $user->sex()->associate(Catalogue::find($request->input('sex.id')));
+//        $patient->sector()->associate(Catalogue::find($request->input('sector.id')));
 
         $user->username = $request->input('username');
         $user->name = $request->input('name');
         $user->lastname = $request->input('lastname');
-        $user->birthdate = $request->input('birthdate');
+//        $user->birthdate = $request->input('birthdate');
         $user->email = $request->input('email');
         $user->phone = $request->input('phone');
 
         $user->save();
-
+        $user->syncRoles($request->input('role.name'));
         return (new UserResource($user))
             ->additional([
                 'msg' => [

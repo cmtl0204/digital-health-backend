@@ -20,6 +20,7 @@ class AppSeeder extends Seeder
         $this->createTypeFootCatalogues();
         $this->createUnitCatalogues();
         $this->createProducts();
+        $this->updateProducts();
         $this->createPatients();
         $this->createClinicalHistories();
         $this->createReferenceValues();
@@ -2536,6 +2537,26 @@ values
 (19,	'Vino tinto',	'2',	'copa',	200,	200,	170,	null,	null,	5.2,	null),
 (19,	'Vodka',	'60',	'ml',	60,	60,	139,	null,	null,	0,	null),
 (19,	'Whisky',	'55',	'ml',	55,	55,	138,	null,	null,	0.1,	null)");
+    }
+
+    private function updateProducts()
+    {
+        DB::select("update app.products set quantity = '1/2' where quantity='0.5'");
+        DB::select("update app.products set quantity = '1/4' where quantity='0.25';");
+        DB::select("update app.products set quantity = '1/3' where quantity='0.333333333333333';");
+        DB::select("update app.products set quantity = '1/5' where quantity='0.2';");
+        DB::select("update app.products set quantity = '1/6' where quantity='0.166666666666667';");
+        DB::select("update app.products set quantity = '1/7' where quantity='0.142857142857143';");
+        DB::select("update app.products set quantity = '2/4' where quantity='0.666666666666667';");
+        DB::select("update app.products set quantity = '3/4' where quantity='0.75';");
+        DB::select("update app.products set quantity = '3/7' where quantity='0.428571428571429';");
+        DB::select("update app.products set quantity = '1 1/2' where quantity='1.5';");
+        DB::select("update app.products set quantity = '1 1/4' where quantity='1.25';");
+        DB::select("update app.products set quantity = '1 1/3' where quantity='1.33333333333333';");
+        DB::select("update app.products set quantity = '2 1/3' where quantity='2.33333333333333';");
+        DB::select("update app.products set quantity = '2 1/2' where quantity='2.5';");
+        DB::select("update app.products set quantity = '3 1/2' where quantity='3.5';");
+        DB::select("update app.products set quantity = '4 1/2' where quantity='4.5';");
     }
 
     private function createClinicalHistories()

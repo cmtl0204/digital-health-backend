@@ -24,7 +24,7 @@ class StoreUserRequest extends FormRequest
     public function rules()
     {
         return [
-            'identificationType' => ['required'],
+//            'identificationType' => ['required'],
             'username' => ['required', 'max:20'],
             'name' => ['required', 'max:100'],
             'lastname' => ['required', 'max:100'],
@@ -36,7 +36,7 @@ class StoreUserRequest extends FormRequest
     public function attributes()
     {
         return [
-            'identificationType' => 'tipo de documento',
+//            'identificationType' => 'tipo de documento',
             'username' => 'nombre de usuario',
             'name' => 'nombres',
             'lastname' => 'apellidos',
