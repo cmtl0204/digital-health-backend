@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 
 Route::get('init', function () {
     if (env('APP_ENV') != 'local') {
-        return response()->json('El sistema se encuentra en producción.', 500);
+        return response()->json('El sistema se encuentra en producción.', 403);
     }
 
     DB::select('drop schema if exists public cascade;');

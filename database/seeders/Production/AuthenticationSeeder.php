@@ -25,9 +25,7 @@ class AuthenticationSeeder extends Seeder
      */
     public function run()
     {
-        $this->createMenus();
         $this->createSystem();
-
         $this->createLocationCatalogues();
         $this->createIdentificationTypeCatalogues();
         $this->createSexCatalogues();
@@ -43,85 +41,78 @@ class AuthenticationSeeder extends Seeder
 
         $this->createUsers();
         $this->createRoles();
+        $this->createMenus();
         $this->createPermissions();
         $this->assignRolePermissions();
         $this->assignUserRoles();
 
         $this->createStates();
     }
+
     private function createSystem()
     {
         $catalogues = json_decode(file_get_contents(storage_path() . "/catalogues.json"), true);
 
         System::factory()->create([
             'code' => $catalogues['system']['code'],
-            'name' => 'Sistema de Gestión Académico - Administrativo',
-            'acronym' => 'IGNUG',
+            'name' => 'Esquel - ChatBot',
+            'acronym' => 'Esquel',
             'version' => '2.2.3',
-            'redirect' => 'https://uic.yavirac.edu.ec/#',
-            'date' => '2021-03-10',
+            'redirect' => 'http://localhost:4200/#',
+            'date' => '2022-02-15',
             'state' => true
         ]);
     }
+
     private function createMenus()
     {
-        $menus = Menu::factory(4)->create(['router_link' => null]);
-        foreach ($menus as $menu) {
-            $menuTests = Menu::factory(5)->create(['parent_id' => $menu->id]);
-        }
+        Menu::factory(2)->sequence(
+            [
+                'role_id' => 1,
+                'icon' => 'pi pi-users',
+                'label' => 'Administración Usuarios',
+                'router_link' => '/user-administration'
+            ],
+            [
+                'role_id' => 2,
+                'icon' => 'pi pi-users',
+                'label' => 'Pacientes',
+                'router_link' => '/patients'
+            ]
+        )->create();
     }
 
     private function createUsers()
     {
-        $identificationTypes = Catalogue::where('type', 'IDENTIFICATION_PROFESSIONAL_TYPE')->get();
         $sexes = Catalogue::where('type', 'SEX_TYPE')->get();
         $genders = Catalogue::where('type', 'GENDER_TYPE')->get();
-        $ethnicOrigin = Catalogue::where('type', 'ETHNIC_ORIGIN_TYPE')->get();
-        $bloodType = Catalogue::where('type', 'BLOOD_TYPE')->get();
-        $civilStatus = Catalogue::where('type', 'CIVIL_STATUS')->get();
-        $operators = Catalogue::where('type', 'PHONE_OPERATOR')->get();
-        $locations = Location::where('type_id', 1)->get();
-        $userFactory = User::factory()->create(
+        User::factory(3)->sequence(
             [
-                'username' => '1234567890',
-                'identification_type_id' => $identificationTypes[rand(0, $identificationTypes->count() - 1)],
+                'username' => 'admin',
+                'email' => 'cesar.tamayo0204@gmail.com',
                 'sex_id' => $sexes[rand(0, $sexes->count() - 1)],
-                'gender_id' => $genders[rand(0, $genders->count() - 1)],
-                'ethnic_origin_id' => $ethnicOrigin[rand(0, $ethnicOrigin->count() - 1)],
-                'blood_type_id' => $bloodType[rand(0, $bloodType->count() - 1)],
-                'civil_status_id' => $civilStatus[rand(0, $civilStatus->count() - 1)],
+                'gender_id' => $genders[rand(0, $sexes->count() - 1)]
+            ],
+            [
+                'username' => 'verimarilu1@gmail.com',
+                'email' => 'verimarilu1@gmail.com',
+                'sex_id' => $sexes[rand(0, $sexes->count() - 1)],
+                'gender_id' => $genders[rand(0, $sexes->count() - 1)]
+            ],
+            [
+                'username' => 'paciente@gmail.com',
+                'email' => 'paciente@gmail.com',
+                'sex_id' => $sexes[rand(0, $sexes->count() - 1)],
+                'gender_id' => $genders[rand(0, $sexes->count() - 1)]
             ]
-        );
-        Phone::factory(2)->for($userFactory, 'phoneable')
-            ->create(
-                [
-                    'operator_id' => $operators[rand(0, $operators->count() - 1)],
-                    'location_id' => $locations[rand(0, $locations->count() - 1)]
-                ]
-            );
-        Email::factory(2)->for($userFactory, 'emailable')->create();
-//        for ($i = 1; $i <= 10; $i++) {
-//            $userFactory = User::factory()
-//                ->create([
-//                    'identification_type_id' => $identificationTypes[rand(0, $identificationTypes->count() - 1)],
-//                    'sex_id' => $sexes[rand(0, $sexes->count() - 1)],
-//                    'gender_id' => $genders[rand(0, $genders->count() - 1)],
-//                    'ethnic_origin_id' => $ethnicOrigin[rand(0, $ethnicOrigin->count() - 1)],
-//                    'blood_type_id' => $bloodType[rand(0, $bloodType->count() - 1)],
-//                    'civil_status_id' => $civilStatus[rand(0, $civilStatus->count() - 1)],
-//                ]);
-//            Phone::factory(2)->for($userFactory, 'phoneable')
-//                ->create(['operator_id' => $operators[rand(0, $operators->count() - 1)]]);
-//            Email::factory(2)->for($userFactory, 'emailable')->create();
-//        }
+        )->create();
     }
 
     private function createRoles()
     {
         Role::create(['name' => 'admin']);
-        Role::create(['name' => 'guest']);
-        Role::create(['name' => 'app']);
-        Role::create(['name' => 'company']);
+        Role::create(['name' => 'medic']);
+        Role::create(['name' => 'patient']);
     }
 
     private function createPermissions()
@@ -131,30 +122,40 @@ class AuthenticationSeeder extends Seeder
         Permission::create(['name' => 'update-users']);
         Permission::create(['name' => 'delete-users']);
 
-        Permission::create(['name' => 'download-files']);
-        Permission::create(['name' => 'upload-files']);
-        Permission::create(['name' => 'read-files']);
-        Permission::create(['name' => 'write-files']);
-        Permission::create(['name' => 'delete-files']);
+        Permission::create(['name' => 'view-patients']);
+        Permission::create(['name' => 'store-patients']);
+        Permission::create(['name' => 'update-patients']);
+        Permission::create(['name' => 'delete-patients']);
 
-        Permission::create(['name' => 'view-professionals']);
-        Permission::create(['name' => 'store-professionals']);
-        Permission::create(['name' => 'update-professionals']);
-        Permission::create(['name' => 'delete-professionals']);
+        Permission::create(['name' => 'view-clinicalHistories']);
+        Permission::create(['name' => 'store-clinicalHistories']);
+        Permission::create(['name' => 'update-clinicalHistories']);
+        Permission::create(['name' => 'delete-clinicalHistories']);
     }
 
     private function assignRolePermissions()
     {
         $role = Role::firstWhere('name', 'admin');
-        $roleProfessional = Role::firstWhere('name', 'app');
-        $role->syncPermissions(Permission::get());
-        $roleProfessional->syncPermissions(Permission::where('name','like','%professionals%')->get());
+        $roleMedic = Role::firstWhere('name', 'medic');
+        $rolePatient = Role::firstWhere('name', 'patient');
+
+        $role->syncPermissions(Permission::where('name', 'like', '%users%')->get());
+
+        $roleMedic->syncPermissions(Permission::where('name', 'like', '%patients%')
+            ->orWhere('name', 'like', '%clinicalHistories%')->get());
+
+        $rolePatient->syncPermissions(Permission::where('name', 'like', '%patients%')
+            ->orWhere('name', 'like', '%clinicalHistories%')->get());
     }
 
     private function assignUserRoles()
     {
-        $user = User::find(1);
-        $user->assignRole('admin');
+        $userAdmin = User::find(1);
+        $userMedic = User::find(2);
+        $userPatient = User::find(3);
+        $userAdmin->assignRole('admin');
+        $userMedic->assignRole('medic');
+        $userPatient->assignRole('patient');
     }
 
     private function createLocationCatalogues()
@@ -285,7 +286,8 @@ class AuthenticationSeeder extends Seeder
         DB::select("insert into core.locations(type_id,code,name,alpha2_code,alpha3_code,calling_code) values(1,'97','IRÁN','IM','SN','SN');");
         DB::select("insert into core.locations(type_id,code,name,alpha2_code,alpha3_code,calling_code) values(1,'98','IRLANDA','NF','SN','SN');");
         DB::select("insert into core.locations(type_id,code,name,alpha2_code,alpha3_code,calling_code) values(1,'99','ISLA DE MAN','IS','IMN','+44');");
-        DB::select("insert into core.locations(type_id,code,name,alpha2_code,alpha3_code,calling_code) values(1,'100','ISLA NORFOLK','IS','NFK','+672');");
+        DB::select("insert into core.locations(type_id,code,name,alpha2_code,alpha3_code,calling_code) values(1,'100' ||
+                                                                                            '','ISLA NORFOLK','IS','NFK','+672');");
         DB::select("insert into core.locations(type_id,code,name,alpha2_code,alpha3_code,calling_code) values(1,'101','ISLANDIA','KY','ISL','+354');");
         DB::select("insert into core.locations(type_id,code,name,alpha2_code,alpha3_code,calling_code) values(1,'102','ISLAS ÅLAND','CK','ISL','+354');");
         DB::select("insert into core.locations(type_id,code,name,alpha2_code,alpha3_code,calling_code) values(1,'103','ISLAS CAIMÁN','FO','CYM','+1345');");
@@ -685,6 +687,13 @@ class AuthenticationSeeder extends Seeder
         DB::select("insert into core.locations(type_id,parent_id,code,name) values(3,273,'9003','EL PIEDRERO');");
     }
 
+    private function deleteLocations()
+    {
+        DB::table('core.locations')->update(['deleted_at' => '2022-03-03']);
+        DB::table('core.locations')->whereIn('id', [250, 252, 254, 265, 266])->update(['deleted_at' => null]);
+        DB::table('core.locations')->whereIn('parent_id', [250, 252, 254, 265, 266])->update(['deleted_at' => null]);
+    }
+
     private function createIdentificationTypeCatalogues()
     {
 //        $catalogues = json_decode(file_get_contents(storage_path() . "/catalogues.json"), true);
@@ -721,7 +730,7 @@ class AuthenticationSeeder extends Seeder
     private function createGenderCatalogues()
     {
         $catalogues = json_decode(file_get_contents(storage_path() . "/catalogues.json"), true);
-        Catalogue::factory(4)->sequence(
+        Catalogue::factory(2)->sequence(
             [
                 'code' => $catalogues['catalogue']['gender']['male'],
                 'name' => 'MASCULINO',
@@ -732,23 +741,23 @@ class AuthenticationSeeder extends Seeder
                 'name' => 'FEMENINO',
                 'type' => $catalogues['catalogue']['gender']['type'],
             ],
-            [
-                'code' => $catalogues['catalogue']['gender']['other'],
-                'name' => 'OTRO',
-                'type' => $catalogues['catalogue']['gender']['type'],
-            ],
-            [
-                'code' => $catalogues['catalogue']['gender']['not_say'],
-                'name' => 'PREFIERO NO DECIRLO',
-                'type' => $catalogues['catalogue']['gender']['type'],
-            ],
+//            [
+//                'code' => $catalogues['catalogue']['gender']['other'],
+//                'name' => 'OTRO',
+//                'type' => $catalogues['catalogue']['gender']['type'],
+//            ],
+//            [
+//                'code' => $catalogues['catalogue']['gender']['not_say'],
+//                'name' => 'PREFIERO NO DECIRLO',
+//                'type' => $catalogues['catalogue']['gender']['type'],
+//            ],
         )->create();
     }
 
     private function createSectorTypeCatalogues()
     {
         $catalogues = json_decode(file_get_contents(storage_path() . "/catalogues.json"), true);
-        Catalogue::factory(3)->sequence(
+        Catalogue::factory(4)->sequence(
             [
                 'name' => 'NORTE',
                 'type' => $catalogues['catalogue']['sector']['type'],
@@ -759,6 +768,10 @@ class AuthenticationSeeder extends Seeder
             ],
             [
                 'name' => 'SUR',
+                'type' => $catalogues['catalogue']['sector']['type'],
+            ],
+            [
+                'name' => 'VALLES',
                 'type' => $catalogues['catalogue']['sector']['type'],
             ],
         )->create();

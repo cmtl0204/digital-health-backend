@@ -3,11 +3,9 @@
 namespace Database\Seeders;
 
 use Database\Seeders\Develop\AuthenticationSeeder;
-use Database\Seeders\Develop\CoreSeeder;
 use Database\Seeders\Develop\AppSeeder;
-
 use Database\Seeders\Production\AuthenticationSeeder as AuthenticationSeederProd;
-use Database\Seeders\Production\CoreSeeder as CoreSeederProd;
+use Database\Seeders\Production\AppSeeder as AppSeederProd;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -19,9 +17,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call([
-            AuthenticationSeeder::class,
-            AppSeeder::class
-        ]);
+        if (env('SEEDER_ENV') != 'local') {
+            $this->call([
+                AuthenticationSeederProd::class,
+                AppSeederProd::class
+            ]);
+        } else {
+            $this->call([
+                AuthenticationSeeder::class,
+                AppSeeder::class
+            ]);
+        }
     }
 }
