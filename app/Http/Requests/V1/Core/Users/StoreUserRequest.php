@@ -25,7 +25,7 @@ class StoreUserRequest extends FormRequest
     {
         return [
 //            'identificationType' => ['required'],
-            'username' => ['required', 'max:20'],
+            'username' => ['required', 'max:100'],
             'name' => ['required', 'max:100'],
             'lastname' => ['required', 'max:100'],
             'email' => ['required', 'max:100', 'email'],

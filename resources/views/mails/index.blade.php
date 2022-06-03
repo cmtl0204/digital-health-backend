@@ -15,7 +15,7 @@
 <body>
 <div class="content">
     <div class="row">
-        <div class="col-7 offset-2">
+        <div class="col-12">
             <img
                 src="{{$message->embed(asset('images/email/logo.png'))}}"
                 width="120px"
@@ -24,7 +24,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-6 offset-2 border">
+        <div class="col-12 border">
             <p class="text-muted">
                 Fecha: <b>{{\Carbon\Carbon::now()->toDateString()}}</b>
                 <b class="ml-2">{{\Carbon\Carbon::now()->toTimeString()}}</b>

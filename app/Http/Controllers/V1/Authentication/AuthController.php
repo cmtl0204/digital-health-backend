@@ -187,7 +187,7 @@ class AuthController extends Controller
             return $user;
         }
 
-        $token = Str::random(6);
+        $token = rand(100000,999999);
 
         PasswordReset::create([
             'username' => $user->username,

@@ -9,8 +9,8 @@
             <br>
             <p>Este código tiene tiempo de duración de <b>10 min.</b> y es válido por <b>una sola ocasión</b>.</p>
             <br>
-            <p>Código: <b>{{$data->token}}</b>
-            </p>
+            <h2>Código: <b>{{$data->token}}</b>
+            </h2>
             <br>
             <p>Si no ha solicitado este servicio, repórtelo al administrador.</p>
         </div>
