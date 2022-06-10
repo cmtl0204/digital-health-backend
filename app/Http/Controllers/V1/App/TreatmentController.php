@@ -15,6 +15,7 @@ use App\Models\App\Product;
 use App\Models\App\Treatment;
 use App\Models\App\TreatmentDetail;
 use App\Models\App\TreatmentOption;
+use App\Models\Authentication\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -278,5 +279,23 @@ class TreatmentController extends Controller
                 'code' => '200'
             ]
         ]);
+    }
+
+    public function generateReport(User $treatment)
+    {
+
+        $data = Catalogue::whereHas('treatmentDetails')
+            ->with(['treatmentDetails' => function ($treatmentDetails) use ($treatment) {
+                $treatmentDetails->where('treatment_id', $treatment->id)->with('product')
+                    ->with(['treatmentOptions' => function ($treatmentOptions) {
+                        $treatmentOptions->with('product');
+                    }]);
+            }])
+            ->where('type', 'FOOD_TYPE')
+            ->orderBy('code')
+            ->get();
+
+        $pdf = \PDF::loadView('reports.app.treatment', ['data' => $treatment]);
+        return $pdf->stream('tratamiento.pdf');
     }
 }
