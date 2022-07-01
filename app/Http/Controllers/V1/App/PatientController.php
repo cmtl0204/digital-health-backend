@@ -127,6 +127,10 @@ class PatientController extends Controller
 
     public function show(Patient $patient)
     {
+        $patient = $patient->with(['clinicalHistories' => function ($clinicalHistories) {
+            $clinicalHistories->orderByDesc('id');
+        }])->first();
+
         return (new PatientResource($patient))
             ->additional([
                 'msg' => [
@@ -136,6 +140,21 @@ class PatientController extends Controller
                 ]
             ])
             ->response()->setStatusCode(200);
+    }
+
+    public function destroy(Patient $patient)
+    {
+        $patient->delete();
+
+        return (new PatientResource($patient))
+            ->additional([
+                'msg' => [
+                    'summary' => 'Se eliminó correctamente',
+                    'detail' => '',
+                    'code' => '201'
+                ]
+            ])
+            ->response()->setStatusCode(201);
     }
 
     public function profile(Patient $patient)
@@ -177,6 +196,7 @@ class PatientController extends Controller
         $totalCholesterol = $this->calculateTotalCholesterol($clinicalHistory);
 
         $data = array(
+            'user' => $user,
             'bodyFat' => $percentageBodyFat,
             'boneMass' => $boneMass,
             'breathingFrequency' => $breathingFrequency,

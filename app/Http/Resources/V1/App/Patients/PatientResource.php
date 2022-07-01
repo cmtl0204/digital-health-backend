@@ -22,7 +22,7 @@ class PatientResource extends JsonResource
             'id' => $this->id,
             'sector' => CatalogueResource::make($this->sector) ,
             'user' => UserResource::make($this->user) ,
-//            'clinicalHistories' => ClinicalHistoryResource::collection($this->clinicalHistories) ,
+            'clinicalHistories' => ClinicalHistoryResource::collection($this->clinicalHistories) ,
         ];
     }
 }

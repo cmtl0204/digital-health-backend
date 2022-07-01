@@ -3,6 +3,7 @@
 namespace App\Models\App;
 
 use App\Models\Authentication\User;
+use Dyrynda\Database\Support\CascadeSoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -14,8 +15,11 @@ class Patient extends Model implements Auditable
     use HasFactory;
     use Auditing;
     use SoftDeletes;
+    use CascadeSoftDeletes;
 
     protected $table = 'app.patients';
+
+    protected $cascadeDeletes = ['clinicalHistories','treatments'];
 
     protected $fillable = [
         'code',
