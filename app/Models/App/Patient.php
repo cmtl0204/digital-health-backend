@@ -28,7 +28,7 @@ class Patient extends Model implements Auditable
         'type',
     ];
 
-    // Relationsships
+    // Relationships
     public function clinicalHistories()
     {
         return $this->hasMany(ClinicalHistory::class);

@@ -8,6 +8,7 @@ use App\Http\Requests\V1\App\ClinicalHistories\UpdateClinicalHistoryRequest;
 use App\Http\Requests\V1\App\Patients\IndexPatientRequest;
 use App\Http\Requests\V1\App\Patients\RegisterPatientUserRequest;
 use App\Http\Requests\V1\App\Patients\UpdatePatientUserRequest;
+use App\Http\Resources\V1\App\ClinicalHistories\ClinicalHistoryCollection;
 use App\Http\Resources\V1\App\ClinicalHistories\ClinicalHistoryResource;
 use App\Http\Resources\V1\App\Patients\PatientCollection;
 use App\Http\Resources\V1\App\Patients\PatientResource;
@@ -127,10 +128,6 @@ class PatientController extends Controller
 
     public function show(Patient $patient)
     {
-        $patient = $patient->with(['clinicalHistories' => function ($clinicalHistories) {
-            $clinicalHistories->orderByDesc('id');
-        }])->first();
-
         return (new PatientResource($patient))
             ->additional([
                 'msg' => [
@@ -225,6 +222,23 @@ class PatientController extends Controller
                 'code' => '201'
             ]
         ]);
+    }
+
+    public function getClinicalHistories(Patient $patient)
+    {
+        $clinicalHistories = $patient->clinicalHistories()
+            ->orderByDesc('registered_at')
+            ->get();
+
+        return (new ClinicalHistoryCollection($clinicalHistories))
+            ->additional([
+                'msg' => [
+                    'summary' => 'success',
+                    'detail' => '',
+                    'code' => '200'
+                ]
+            ])
+            ->response()->setStatusCode(200);
     }
 
     public function showLastClinicalHistory(Patient $patient)
