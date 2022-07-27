@@ -10,8 +10,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class TreatmentOption extends Model
 {
     use HasFactory;
-    use SoftDeletes;
-    use CascadeSoftDeletes;
+//    use SoftDeletes;
+//    use CascadeSoftDeletes;
 
     protected $table = 'app.treatment_options';
 

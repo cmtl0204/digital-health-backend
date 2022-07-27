@@ -55,6 +55,8 @@ class TreatmentController extends Controller
     public function storeTreatmentDetail(Request $request, Treatment $treatment)
     {
         $type = Catalogue::find($request->input('type.id'));
+        $products = Product::where('type_id', $request->input('productType.id'))->get();
+
         $treatmentDetail = new TreatmentDetail();
         $treatmentDetail->treatment()->associate($treatment);
         $treatmentDetail->product()->associate(Product::find($request->input('product.id')));
@@ -65,9 +67,19 @@ class TreatmentController extends Controller
 
         $treatmentDetail->save();
 
-        foreach ($request->input('treatmentOptions') as $treatmentOption) {
-            $this->storeTreatmentOption($treatmentOption, $treatmentDetail);
+//        foreach ($request->input('treatmentOptions') as $treatmentOption) {
+//            $this->storeTreatmentOption($treatmentOption, $treatmentDetail);
+//        }
+
+        foreach ($products as $product) {
+            $treatmentOption = new TreatmentOption();
+            $treatmentOption->treatmentDetail()->associate($treatmentDetail);
+            $treatmentOption->product()->associate(Product::find($product->id));
+            $treatmentOption->unit = $product->unit;
+            $treatmentOption->quantity = $product->quantity;
+            $treatmentOption->save();
         }
+
         return (new TreatmentDetailResource($treatmentDetail))
             ->additional([
                 'msg' => [
@@ -188,6 +200,18 @@ class TreatmentController extends Controller
         $treatmentOptions = $treatmentDetail->treatmentOptions()->get();
         TreatmentOption::destroy($treatmentOptions->modelKeys());
 
+        if ($request->input('treatmentOptions') == []) {
+            $products = Product::where('type_id', $request->input('productType.id'))->get();
+
+            foreach ($products as $product) {
+                $treatmentOption = new TreatmentOption();
+                $treatmentOption->treatmentDetail()->associate($treatmentDetail);
+                $treatmentOption->product()->associate(Product::find($product->id));
+                $treatmentOption->unit = $product->unit;
+                $treatmentOption->quantity = $product->quantity;
+                $treatmentOption->save();
+            }
+        }
         foreach ($request->input('treatmentOptions') as $treatmentOption) {
             $this->storeTreatmentOption($treatmentOption, $treatmentDetail);
         }
