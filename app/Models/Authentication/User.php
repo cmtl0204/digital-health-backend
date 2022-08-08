@@ -203,7 +203,7 @@ class User extends Authenticatable implements Auditable, MustVerifyEmail
     // Mutators
     public function setUsernameAttribute($value)
     {
-        $this->attributes['username'] = trim($value);
+        $this->attributes['username'] = trim(strtolower($value));
     }
 
     public function setNameAttribute($value)
