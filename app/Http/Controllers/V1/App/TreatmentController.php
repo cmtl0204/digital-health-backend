@@ -112,6 +112,26 @@ class TreatmentController extends Controller
             ->response()->setStatusCode(201);
     }
 
+    private function updateTreatmentOption($treatmentOption, TreatmentDetail $treatmentDetail)
+    {
+        $treatmentOption->treatmentDetail()->associate($treatmentDetail);
+        $treatmentOption->product()->associate(Product::find($treatmentOption->product->id));
+//        $treatmentOption->unit = $request['unit'];
+//        $treatmentOption->quantity = $request['quantity'];
+
+        $treatmentOption->save();
+
+        return (new TreatmentOptionResource($treatmentOption))
+            ->additional([
+                'msg' => [
+                    'summary' => 'Opción agregada',
+                    'detail' => 'Se creó la opción',
+                    'code' => '201'
+                ]
+            ])
+            ->response()->setStatusCode(201);
+    }
+
     private function calculateTimeStartedAt($treatment, $type)
     {
         switch ($type->code) {
@@ -200,21 +220,51 @@ class TreatmentController extends Controller
         $treatmentOptions = $treatmentDetail->treatmentOptions()->get();
         TreatmentOption::destroy($treatmentOptions->modelKeys());
 
-        if ($request->input('treatmentOptions') == []) {
-            $products = Product::where('type_id', $request->input('productType.id'))->get();
+//        if ($request->input('treatmentOptions') == []) {
+        $products = Product::where('type_id', $request->input('productType.id'))->get();
+
+        foreach ($products as $product) {
+            $treatmentOption = new TreatmentOption();
+            $treatmentOption->treatmentDetail()->associate($treatmentDetail);
+            $treatmentOption->product()->associate(Product::find($product->id));
+            $treatmentOption->unit = $product->unit;
+            $treatmentOption->quantity = $product->quantity;
+            $treatmentOption->save();
+        }
+//        }
+//        foreach ($request->input('treatmentOptions') as $treatmentOption) {
+//            $this->storeTreatmentOption($treatmentOption, $treatmentDetail);
+//        }
+        return (new TreatmentDetailResource($treatmentDetail))
+            ->additional([
+                'msg' => [
+                    'summary' => 'Producto agregado',
+                    'detail' => 'El producto se agregó correctamente',
+                    'code' => '201'
+                ]
+            ])
+            ->response()->setStatusCode(201);
+    }
+
+    public function updateTreatmentDetails()
+    {
+        $treatmentDetails = TreatmentDetail::get();
+
+        foreach ($treatmentDetails as $treatmentDetail) {
+            $product = Product::find($treatmentDetail->product_id);
+
+            $products = Product::where('type_id', $product->type_id)->get();
 
             foreach ($products as $product) {
                 $treatmentOption = new TreatmentOption();
                 $treatmentOption->treatmentDetail()->associate($treatmentDetail);
-                $treatmentOption->product()->associate(Product::find($product->id));
+                $treatmentOption->product()->associate($product);
                 $treatmentOption->unit = $product->unit;
                 $treatmentOption->quantity = $product->quantity;
                 $treatmentOption->save();
             }
         }
-        foreach ($request->input('treatmentOptions') as $treatmentOption) {
-            $this->storeTreatmentOption($treatmentOption, $treatmentDetail);
-        }
+
         return (new TreatmentDetailResource($treatmentDetail))
             ->additional([
                 'msg' => [

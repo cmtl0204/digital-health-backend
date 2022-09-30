@@ -77,6 +77,7 @@ Route::controller(TreatmentController::class)->group(function () {
         Route::post('patients/{patient}','store');
         Route::put('treatment-details/{treatment_detail}','updateTreatmentDetail');
         Route::delete('treatment-details/{treatment_detail}','destroyTreatmentDetail');
+        Route::put('treatment-details','updateTreatmentDetails');
     });
 });
 
